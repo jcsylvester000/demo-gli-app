@@ -1,6 +1,13 @@
 import { GliMark, LogoLockup } from "@/components/brand/logo";
 import { BrushUnderline, CmykBar, CmykSeal, CropMarks, RegMark } from "@/components/brand/print-marks";
 import { buttonClass } from "@/components/ui/button";
+import { SketchSlider } from "@/components/gli/sketch-slider";
+import { SpecCard } from "@/components/gli/spec-card";
+import { SignOffTestimonial } from "@/components/gli/sign-off-testimonial";
+import { ProofFaq } from "@/components/gli/proof-faq";
+import { ProofImage } from "@/components/gli/proof-image";
+import { WORK_IMAGES } from "@/content/work-images";
+import dieline from "@/assets/demo/demo-dieline.png";
 
 export const metadata = { title: "Style guide", robots: { index: false, follow: false } };
 
@@ -76,6 +83,44 @@ export default function StyleGuide() {
         <div className="on-dark mt-4 flex flex-wrap gap-3 bg-gli-navy p-5">
           <button type="button" className={buttonClass("accent")}>Start a job ticket</button>
           <button type="button" className={buttonClass("outline-light")}>See the work</button>
+        </div>
+      </section>
+
+      <section aria-labelledby="sg-components">
+        <h2 id="sg-components" className="text-2xl">Signature components (live on Home: S1, S3, S4, S5, S6, S7, S13)</h2>
+        <p className="mt-2 max-w-2xl text-gli-slate">Components below are not on the home page yet: they render there only when real, approved content exists.</p>
+
+        <h3 className="mt-10 text-xl">S2 Sketch-to-Show-Floor Slider</h3>
+        <p className="mt-1 text-sm text-gli-slate">Demo pairing for review only (a generic dieline drawing and a printed pack): not a real before/after. Drag, or focus the handle and use the arrow keys.</p>
+        <div className="mt-4 max-w-3xl">
+          <SketchSlider
+            before={{ src: dieline, alt: "Generic box dieline drawing (demo)", caption: "Demo dieline", rx: false, fit: "contain" }}
+            after={WORK_IMAGES.nexcare}
+            labels={["Dieline", "Printed pack"]}
+          />
+        </div>
+
+        <h3 className="mt-12 text-xl">S9 Spec-Sheet Product Card</h3>
+        <div className="mt-4 grid max-w-4xl gap-6 sm:grid-cols-2">
+          <SpecCard name="Pull-up banner" href="/products" oneLiner="Printed panel, stand and carry bag." specs={[{ label: "Size", value: "850 × 2000 mm standard" }, { label: "Includes", value: "Printed panel, stand, carry bag" }]} priceCentavos={null} />
+          <SpecCard name="Example with a price" href="/products" oneLiner="Shown only when GLI sets a real price in the admin." specs={[{ label: "Size", value: "A4 or custom" }]} priceCentavos={1250000} leadTime="Example: 5 working days" />
+        </div>
+
+        <h3 className="mt-12 text-xl">S11 Client Sign-Off Testimonial</h3>
+        <p className="mt-1 text-sm text-gli-slate">Sample text. On the site this renders only for approved, attributed quotes.</p>
+        <div className="mt-4">
+          <SignOffTestimonial item={{ id: 0, quote: "[Sample] One or two sentences on deadline, quality or budget, in the client's own words.", person: "Name", title: "Title", clientSlug: null }} company="Company" />
+        </div>
+
+        <h3 className="mt-12 text-xl">S12 Proof FAQ</h3>
+        <div className="mt-4 max-w-3xl">
+          <ProofFaq items={[{ q: "Do you handle printing in-house?", a: "Sample answer. Final FAQ copy comes from Document 4 §11 in Batch 3." }, { q: "Do you deliver outside Metro Manila?", a: "Sample answer, pending GLI's confirmation of coverage (Q-07)." }]} />
+        </div>
+
+        <h3 className="mt-12 text-xl">Proof image</h3>
+        <div className="mt-6 grid max-w-3xl grid-cols-2 gap-8">
+          <ProofImage image={WORK_IMAGES.grohe} sizes="360px" className="-rotate-2" />
+          <ProofImage image={WORK_IMAGES.threeMDisplay} sizes="360px" className="rotate-[1.5deg]" />
         </div>
       </section>
 

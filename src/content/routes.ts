@@ -1,4 +1,6 @@
 import { ALL_SERVICES, INDUSTRIES } from "./site";
+import { CASES } from "./cases";
+import { ARTICLES, INSIGHT_CATEGORIES } from "./articles";
 
 /**
  * Launch URLs (BRD §3 page inventory). Pages not built yet render a "being built" placeholder (noindex)
@@ -12,8 +14,11 @@ export const LAUNCH_ROUTES: RouteDef[] = [
   { path: "/industries", title: "Industries", batch: 3 },
   ...INDUSTRIES.map((i) => ({ path: `/industries/${i.slug}`, title: i.name, parent: "/industries", batch: 3 })),
   { path: "/work", title: "Work", batch: 3 },
+  ...CASES.map((c) => ({ path: `/work/${c.slug}`, title: c.anonTitle ?? c.title, parent: "/work", batch: 3 })),
   { path: "/products", title: "Products", batch: 3 },
   { path: "/insights", title: "Insights", batch: 3 },
+  ...ARTICLES.map((a) => ({ path: `/insights/${a.slug}`, title: a.title, parent: "/insights", batch: 3 })),
+  ...INSIGHT_CATEGORIES.map((c) => ({ path: `/insights/category/${c.slug}`, title: c.name, parent: "/insights", batch: 3 })),
   { path: "/about", title: "About", batch: 3 },
   { path: "/about/how-we-work", title: "How We Work", parent: "/about", batch: 3 },
   { path: "/about/clients", title: "Clients", parent: "/about", batch: 3 },

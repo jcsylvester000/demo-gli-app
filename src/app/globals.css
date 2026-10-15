@@ -107,3 +107,31 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* S1 ripple (Magic UI Ripple, MIT, re-implemented in CSS): slow concentric rings; static under reduced motion. */
+@keyframes gli-ripple {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  50% { transform: translate(-50%, -50%) scale(0.94); }
+}
+.gli-ripple-ring {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  border-radius: 9999px;
+  border: 1px solid rgb(255 255 255 / 0.12);
+  background: rgb(255 255 255 / 0.025);
+  animation: gli-ripple 7s ease-in-out infinite;
+}
+
+/* S3 marquee (Magic UI Marquee, MIT): pauses on hover/focus; replaced by a static wrap under reduced motion. */
+@keyframes gli-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.gli-marquee-track { animation: gli-marquee 60s linear infinite; }
+.gli-marquee:hover .gli-marquee-track,
+.gli-marquee:focus-within .gli-marquee-track { animation-play-state: paused; }
+@media (prefers-reduced-motion: reduce) {
+  .gli-marquee-track { animation: none !important; flex-wrap: wrap; transform: none; }
+  .gli-marquee-dup { display: none; }
+}
