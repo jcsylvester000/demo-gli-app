@@ -33,7 +33,13 @@ export function CaseCard({ item, headingLevel = 3 }: { item: ResolvedCase; headi
           <CropMarks />
           {img ? (
             <div className={img.fit === "contain" ? "relative aspect-[4/3] bg-gli-mist" : "relative aspect-[4/3]"}>
-              <Image src={img.src} alt={img.alt} fill sizes="(min-width: 1024px) 360px, (min-width: 640px) 45vw, 100vw" className={img.fit === "contain" ? "object-contain p-2" : "object-cover"} />
+              <Image
+                src={img.src}
+                alt={img.alt}
+                fill
+                sizes="(min-width: 1024px) 360px, (min-width: 640px) 45vw, 100vw"
+                className={img.fit === "contain" ? "object-contain p-2" : "object-cover"}
+              />
             </div>
           ) : (
             <TypeThumb label={item.title} sub={industry} />

@@ -89,7 +89,7 @@ export const CONTACT = {
   whatsappIntl: pending(""),
   messengerPage: pending(""), // m.me/<page>
   email: pending(""),
-  hours: pending("Monday to Friday, 9 am to 6 pm"),
+  hours: pending("Monday to Friday, 8:30 am to 5:30 pm"),
   /** Response-time promise (Q-04). Shown only once GLI confirms it. */
   responseTime: pending("within one business day"),
 };

@@ -151,3 +151,7 @@ CREATE TABLE IF NOT EXISTS admin_audit (
 INSERT INTO consent_text (version, body) VALUES
   ('v1', 'I agree that Graphics Library, Inc. may use my details to respond to this request, as described in the Privacy Notice.')
 ON CONFLICT (version) DO NOTHING;
+INSERT INTO consent_text (version, body) VALUES
+  ('newsletter-v1', 'Send me Show Floor Notes (4 emails a year). I can unsubscribe at any time. See the Privacy Notice.')
+ON CONFLICT (version) DO NOTHING;
+CREATE INDEX IF NOT EXISTS lead_ip_recent_idx ON lead (ip_hash, created_at);

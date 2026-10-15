@@ -30,7 +30,10 @@ export function ClientRibbon({ label, clients }: { label: string; clients: Ribbo
           <ul className="flex flex-wrap gap-2">
             {INDUSTRIES.map((i) => (
               <li key={i.slug}>
-                <Link href={`/industries/${i.slug}`} className="inline-flex min-h-9 items-center rounded-full border border-gli-line bg-white px-3.5 text-[0.9375rem] font-semibold text-gli-navy hover:border-gli-blue hover:text-gli-blue">
+                <Link
+                  href={`/industries/${i.slug}`}
+                  className="inline-flex min-h-9 items-center rounded-full border border-gli-line bg-white px-3.5 text-[0.9375rem] font-semibold text-gli-navy hover:border-gli-blue hover:text-gli-blue"
+                >
                   {i.name}
                 </Link>
               </li>
@@ -40,9 +43,10 @@ export function ClientRibbon({ label, clients }: { label: string; clients: Ribbo
       </section>
     );
   }
-  const groups = Object.entries(
-    clients.reduce<Record<string, RibbonClient[]>>((acc, c) => ((acc[c.industry] ||= []).push(c), acc), {}),
-  ) as [IndustrySlug, RibbonClient[]][];
+  const groups = Object.entries(clients.reduce<Record<string, RibbonClient[]>>((acc, c) => ((acc[c.industry] ||= []).push(c), acc), {})) as [
+    IndustrySlug,
+    RibbonClient[],
+  ][];
   const row = (dup: boolean) => (
     <ul className={dup ? "gli-marquee-dup flex shrink-0 items-center gap-10 pr-10" : "flex shrink-0 items-center gap-10 pr-10"} aria-hidden={dup || undefined}>
       {groups.map(([ind, list]) => (

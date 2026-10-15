@@ -10,6 +10,7 @@ import { BrushUnderline } from "@/components/brand/print-marks";
 import { buttonClass } from "@/components/ui/button";
 import { PRIMARY_NAV, SERVICE_GROUPS } from "@/content/site";
 import { cn } from "@/lib/utils";
+import { QuoteCount } from "@/components/gli/add-to-quote";
 
 const isActive = (pathname: string, href: string) => pathname === href || pathname.startsWith(href + "/");
 
@@ -174,6 +175,7 @@ export function Header() {
         <div className="flex items-center gap-2">
           <Link href="/quote" className={buttonClass("primary", "md", "hidden sm:inline-flex")}>
             Request a Quote
+            <QuoteCount />
           </Link>
           <button
             type="button"

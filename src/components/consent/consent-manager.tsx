@@ -84,8 +84,8 @@ export function ConsentManager({ gtmId }: { gtmId?: string }) {
                   <input type="checkbox" checked disabled className="size-5 accent-gli-blue" /> Necessary (always on)
                 </label>
                 <label className="flex min-h-11 items-center gap-3">
-                  <input type="checkbox" checked={analytics} onChange={(e) => setAnalytics(e.target.checked)} className="size-5 accent-gli-blue" />{" "}
-                  Analytics (Google Analytics)
+                  <input type="checkbox" checked={analytics} onChange={(e) => setAnalytics(e.target.checked)} className="size-5 accent-gli-blue" /> Analytics
+                  (Google Analytics)
                 </label>
               </fieldset>
             ) : null}

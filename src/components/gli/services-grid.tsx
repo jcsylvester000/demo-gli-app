@@ -27,14 +27,22 @@ export function ServicesGrid({ order, featured = order[0], cta = true }: { order
                 lead ? "flex-col" : "flex-row items-center sm:flex-col sm:items-stretch",
               )}
             >
-              <div className={cn("relative overflow-hidden", lead ? "aspect-[16/10] lg:aspect-auto lg:flex-1" : "aspect-square w-24 shrink-0 self-stretch sm:aspect-[16/10] sm:w-auto")}>
+              <div
+                className={cn(
+                  "relative overflow-hidden",
+                  lead ? "aspect-[16/10] lg:aspect-auto lg:flex-1" : "aspect-square w-24 shrink-0 self-stretch sm:aspect-[16/10] sm:w-auto",
+                )}
+              >
                 {img ? (
                   <Image
                     src={img.src}
                     alt=""
                     fill
                     sizes={lead ? "(min-width: 1024px) 560px, (min-width: 640px) 90vw, 100vw" : "(min-width: 1024px) 270px, (min-width: 640px) 45vw, 100vw"}
-                    className={cn("transition-transform duration-300 group-hover:scale-[1.03]", img.fit === "contain" ? "bg-gli-mist object-contain p-3" : "object-cover")}
+                    className={cn(
+                      "transition-transform duration-300 group-hover:scale-[1.03]",
+                      img.fit === "contain" ? "bg-gli-mist object-contain p-3" : "object-cover",
+                    )}
                   />
                 ) : (
                   <div className="on-dark ripple-field absolute inset-0 flex flex-col justify-between bg-gli-navy p-5 text-white">
@@ -66,7 +74,10 @@ export function ServicesGrid({ order, featured = order[0], cta = true }: { order
                   <h3 className={cn("font-heading font-semibold text-gli-navy group-hover:text-gli-blue", lead ? "text-2xl" : "text-lg")}>{s.name}</h3>
                   <p className={cn("mt-1 text-gli-slate", lead ? "text-base" : "text-[0.9375rem] leading-5")}>{s.oneLiner}</p>
                 </div>
-                <ArrowUpRight aria-hidden="true" className="mt-1 size-5 shrink-0 text-gli-blue transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                <ArrowUpRight
+                  aria-hidden="true"
+                  className="mt-1 size-5 shrink-0 text-gli-blue transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                />
               </div>
             </Link>
           </li>

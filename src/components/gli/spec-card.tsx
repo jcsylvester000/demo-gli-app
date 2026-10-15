@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { WorkImage } from "@/content/work-images";
 import { buttonClass } from "@/components/ui/button";
+import { TypeThumb } from "./proof-image";
 
 export type SpecRow = { label: string; value: string };
 
@@ -22,6 +23,7 @@ export function SpecCard({
   leadTime,
   image,
   addToQuote,
+  fallbackLabel,
 }: {
   name: string;
   href: string;
@@ -31,6 +33,8 @@ export function SpecCard({
   leadTime?: string | null;
   image?: WorkImage | null;
   addToQuote?: React.ReactNode;
+  /** Shown on a typographic tile when there is no permitted photo yet, so card rows stay aligned. */
+  fallbackLabel?: string;
 }) {
   return (
     <article className="flex h-full flex-col rounded-[var(--radius)] border-2 border-dashed border-gli-signal/60 bg-white p-4">
@@ -38,7 +42,9 @@ export function SpecCard({
         <div className="relative aspect-[4/3] bg-gli-mist">
           <Image src={image.src} alt={image.alt} fill sizes="(min-width: 1024px) 300px, 90vw" className="object-contain p-2" />
         </div>
-      ) : null}
+      ) : (
+        <TypeThumb label={fallbackLabel ?? "GLI production"} sub="Production catalogue" />
+      )}
       <h3 className="mt-4 text-xl">
         <Link href={href} className="hover:text-gli-blue">
           {name}

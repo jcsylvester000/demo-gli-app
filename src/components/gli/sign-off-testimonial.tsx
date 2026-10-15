@@ -16,7 +16,10 @@ export function SignOffTestimonial({ item, company }: { item: Testimonial; compa
         {item.title ? <span className="text-gli-slate">, {item.title}</span> : null}
         {company ? <span className="text-gli-slate"> · {company}</span> : null}
       </figcaption>
-      <span aria-hidden="true" className="eyebrow absolute bottom-8 right-8 -rotate-12 rounded-sm border-2 border-gli-blue px-3 py-1 text-gli-blue md:bottom-10 md:right-10">
+      <span
+        aria-hidden="true"
+        className="eyebrow absolute bottom-8 right-8 -rotate-12 rounded-sm border-2 border-gli-blue px-3 py-1 text-gli-blue md:bottom-10 md:right-10"
+      >
         Signed off
       </span>
     </figure>

@@ -25,11 +25,6 @@ export const buttonClass = (variant: Variant = "primary", size: Size = "md", cla
     className,
   );
 
-export function ButtonLink({
-  variant,
-  size,
-  className,
-  ...props
-}: ComponentProps<typeof Link> & { variant?: Variant; size?: Size }) {
+export function ButtonLink({ variant, size, className, ...props }: ComponentProps<typeof Link> & { variant?: Variant; size?: Size }) {
   return <Link className={buttonClass(variant, size, className)} {...props} />;
 }

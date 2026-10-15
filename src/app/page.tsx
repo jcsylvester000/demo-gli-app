@@ -51,7 +51,14 @@ export default async function Home() {
         foundingDate: "1996",
         slogan: "From first sketch to show floor.",
       },
-      { "@type": "WebSite", "@id": `${siteUrl()}/#website`, url: siteUrl(), name: "Graphics Library, Inc.", inLanguage: "en-PH", publisher: { "@id": `${siteUrl()}/#organization` } },
+      {
+        "@type": "WebSite",
+        "@id": `${siteUrl()}/#website`,
+        url: siteUrl(),
+        name: "Graphics Library, Inc.",
+        inLanguage: "en-PH",
+        publisher: { "@id": `${siteUrl()}/#organization` },
+      },
     ],
   };
 
@@ -69,7 +76,10 @@ export default async function Home() {
           </h2>
           <div>
             <p className="text-lg text-gli-ink">{HOME.problem.body}</p>
-            <Link href={HOME.problem.link.href} className="mt-5 inline-flex min-h-11 items-center gap-2 font-heading font-semibold text-gli-blue hover:underline underline-offset-4">
+            <Link
+              href={HOME.problem.link.href}
+              className="mt-5 inline-flex min-h-11 items-center gap-2 font-heading font-semibold text-gli-blue hover:underline underline-offset-4"
+            >
               {HOME.problem.link.label} <ArrowRight aria-hidden="true" className="size-4" />
             </Link>
           </div>
@@ -94,7 +104,10 @@ export default async function Home() {
           <div className="container-site py-16 md:py-24">
             <div className="flex flex-wrap items-end justify-between gap-4">
               <SectionHeading id="featured-title" eyebrow="Our work" title={HOME.featured.h2} />
-              <Link href={HOME.featured.link.href} className="inline-flex min-h-11 items-center gap-2 font-heading font-semibold text-gli-blue hover:underline underline-offset-4">
+              <Link
+                href={HOME.featured.link.href}
+                className="inline-flex min-h-11 items-center gap-2 font-heading font-semibold text-gli-blue hover:underline underline-offset-4"
+              >
                 {HOME.featured.link.label} <ArrowRight aria-hidden="true" className="size-4" />
               </Link>
             </div>
@@ -121,7 +134,10 @@ export default async function Home() {
           <div className="mt-12">
             <ProcessTimeline steps={HOME.process.steps} />
           </div>
-          <Link href="/about/how-we-work" className="mt-10 inline-flex min-h-11 items-center gap-2 font-heading font-semibold text-gli-blue hover:underline underline-offset-4">
+          <Link
+            href="/about/how-we-work"
+            className="mt-10 inline-flex min-h-11 items-center gap-2 font-heading font-semibold text-gli-blue hover:underline underline-offset-4"
+          >
             More on how we work <ArrowRight aria-hidden="true" className="size-4" />
           </Link>
         </div>
@@ -164,7 +180,10 @@ export default async function Home() {
         <div className="container-site py-16 md:py-24">
           <div className="flex flex-wrap items-end justify-between gap-4">
             <SectionHeading id="insights-title" eyebrow="Insights" title={HOME.insights.h2} />
-            <Link href="/insights" className="inline-flex min-h-11 items-center gap-2 font-heading font-semibold text-gli-blue hover:underline underline-offset-4">
+            <Link
+              href="/insights"
+              className="inline-flex min-h-11 items-center gap-2 font-heading font-semibold text-gli-blue hover:underline underline-offset-4"
+            >
               All insights <ArrowRight aria-hidden="true" className="size-4" />
             </Link>
           </div>

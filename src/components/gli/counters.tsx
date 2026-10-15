@@ -63,7 +63,12 @@ export function Counters({ items, tone = "light", className }: { items: Counter[
           <dt className="order-2 mt-1 text-[0.9375rem] leading-5 text-gli-slate data-[dark=true]:text-gli-tint" data-dark={dark}>
             {c.label}
           </dt>
-          <dd className={cn("order-1 flex items-center gap-2 font-heading text-[2.5rem] font-semibold leading-none md:text-5xl", dark ? "text-white" : "text-gli-navy")}>
+          <dd
+            className={cn(
+              "order-1 flex items-center gap-2 font-heading text-[2.5rem] font-semibold leading-none md:text-5xl",
+              dark ? "text-white" : "text-gli-navy",
+            )}
+          >
             <RegMark className={cn("size-5", dark ? "text-gli-sky" : "text-gli-signal")} />
             <Ticker {...c} />
           </dd>

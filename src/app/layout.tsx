@@ -32,7 +32,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en-PH" className={`${barlow.variable} ${sourceSans.variable}`}>
       <body className="flex min-h-dvh flex-col">
-        <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-[80] focus:rounded focus:bg-white focus:px-4 focus:py-2 focus:font-semibold focus:text-gli-blue">
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-[80] focus:rounded focus:bg-white focus:px-4 focus:py-2 focus:font-semibold focus:text-gli-blue"
+        >
           Skip to content
         </a>
         <UtilityBar />

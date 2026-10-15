@@ -9,7 +9,10 @@ type Step = { n: string; title: string; body: string };
 export function ProcessTimeline({ steps }: { steps: Step[] }) {
   return (
     <ol className="relative grid gap-8 md:grid-cols-3 lg:grid-cols-6 lg:gap-5">
-      <span aria-hidden="true" className="absolute bottom-2 left-[11px] top-2 w-px bg-gli-line lg:inset-x-0 lg:bottom-auto lg:left-0 lg:top-[11px] lg:h-px lg:w-auto" />
+      <span
+        aria-hidden="true"
+        className="absolute bottom-2 left-[11px] top-2 w-px bg-gli-line lg:inset-x-0 lg:bottom-auto lg:left-0 lg:top-[11px] lg:h-px lg:w-auto"
+      />
       {steps.map((s) => (
         <li key={s.n} className="relative pl-10 lg:pl-0 lg:pt-10">
           <span className="absolute left-0 top-0 grid size-6 place-items-center rounded-full bg-white text-gli-blue">

@@ -11,7 +11,10 @@ export function ProofFaq({ items, schema = false }: { items: FaqItem[]; schema?:
   return (
     <div className="space-y-3">
       {items.map((it) => (
-        <details key={it.q} className="group rounded-[var(--radius)] border border-gli-line bg-white open:border-gli-blue open:shadow-[0_0_0_1px_var(--color-gli-blue)]">
+        <details
+          key={it.q}
+          className="group rounded-[var(--radius)] border border-gli-line bg-white open:border-gli-blue open:shadow-[0_0_0_1px_var(--color-gli-blue)]"
+        >
           <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 px-5 py-3 font-heading text-lg font-semibold text-gli-navy [&::-webkit-details-marker]:hidden">
             {it.q}
             <span aria-hidden="true" className="font-heading text-2xl font-medium text-gli-blue">

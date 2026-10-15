@@ -1,6 +1,7 @@
 import { clientBySlug, CLIENTS, type PermissionStatus } from "@/content/clients";
 import { CASES, FEATURED_CASE_ORDER, type CaseStudy } from "@/content/cases";
 import type { WorkImage } from "@/content/work-images";
+import type { Gated } from "@/content/gated";
 
 /**
  * The publishing gate (BRD FR-011, FR-014, FR-032, FR-082, FR-086; decisions D-1, D-2).
@@ -14,14 +15,24 @@ import type { WorkImage } from "@/content/work-images";
  */
 export type CaseRow = { workflow: string; rx_sensitive: boolean; rx_cleared: boolean };
 export type Testimonial = { id: number; quote: string; person: string; title: string | null; clientSlug: string | null };
+export type ProductSetting = { priceCentavos: number | null; leadTime: string | null };
 export type Governance = {
   clients: Record<string, PermissionStatus>;
   cases: Record<string, CaseRow>;
   testimonials: Testimonial[];
+  products: Record<string, ProductSetting>;
   source: "database" | "defaults";
 };
 
-export const EMPTY_GOVERNANCE: Governance = { clients: {}, cases: {}, testimonials: [], source: "defaults" };
+export const EMPTY_GOVERNANCE: Governance = { clients: {}, cases: {}, testimonials: [], products: {}, source: "defaults" };
+
+/** Named text only when every client it mentions may be named; otherwise the anonymous wording. */
+export function resolveText(g: Governance, t: Gated): string {
+  if (typeof t === "string") return t;
+  return t.clients.every((slug) => canShowName(clientStatus(g, slug))) ? t.named : t.anon;
+}
+
+export const productSetting = (g: Governance, slug: string): ProductSetting => g.products[slug] ?? { priceCentavos: null, leadTime: null };
 
 export const clientStatus = (g: Governance, slug: string): PermissionStatus => g.clients[slug] ?? "pending";
 export const canShowName = (s: PermissionStatus) => s === "yes" || s === "name_only";
