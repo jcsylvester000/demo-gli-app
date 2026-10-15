@@ -24,10 +24,24 @@ Checks: `npm run check` (lint + types + build).
    - `DATABASE_URL` = Neon **pooled** connection string (required)
    - `IP_HASH_SALT` = any long random string (required from Batch 4)
    - `NEXT_PUBLIC_GTM_ID` = GTM container ID (optional; analytics only load after the visitor accepts cookies)
+   - Lead capture (Batch 4): `RESEND_API_KEY`, `LEAD_FROM_EMAIL` (e.g. `GLI Job Tickets <tickets@your-domain>`; verify the
+     domain in Resend for SPF/DKIM/DMARC), `SALES_INBOX` (comma-separated), `NEXT_PUBLIC_TURNSTILE_SITE_KEY` +
+     `TURNSTILE_SECRET_KEY` (Cloudflare Turnstile), `CRON_SECRET` (16+ random characters), optional `TEAM_ALERT_WEBHOOK_URL`.
 3. Deploy. Every push to `main` redeploys; the migration runs first on every build.
 4. Check `https://<site>.netlify.app/api/health` → `{"ok":true,"db":"ok"}`.
 
 The site stays `noindex` until the real domain is live: then set `ALLOW_INDEXING=true` and `NEXT_PUBLIC_SITE_URL=https://<domain>`.
+
+## Lead capture (Batch 4)
+
+- `/quote`: 4-step job ticket (S8). Ticket numbers `GLI-YYMM-####` (Manila month), unique and sequential.
+- Uploads: PDF, AI, PSD, JPG, PNG, ZIP · ≤ 25 MB · ≤ 5 files. Netlify functions accept ~6 MB per request, so the browser
+  sends 4 MB parts to `/api/upload/...`; the first bytes are checked against the file type. Files live in Netlify Blobs
+  (store `quote-uploads`, private) or `./.data/uploads` locally. They are downloadable only from the admin (Batch 5).
+- After saving, an outbox queues the auto-reply, sales email and optional team alert in the same transaction. Failed sends
+  retry with back-off (on later submissions and every 15 min via `netlify/functions/outbox-retry.mts`). A lead is never lost.
+- Without email settings, leads still save and emails wait in the outbox until settings are added.
+- `/api/health` shows which integrations are configured (no values).
 
 ## Structure
 

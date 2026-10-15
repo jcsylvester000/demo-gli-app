@@ -155,3 +155,23 @@ INSERT INTO consent_text (version, body) VALUES
   ('newsletter-v1', 'Send me Show Floor Notes (4 emails a year). I can unsubscribe at any time. See the Privacy Notice.')
 ON CONFLICT (version) DO NOTHING;
 CREATE INDEX IF NOT EXISTS lead_ip_recent_idx ON lead (ip_hash, created_at);
+
+-- Batch 4: chunked private uploads (Netlify function bodies are ~6 MB, so files arrive in ≤ 4 MB parts).
+CREATE TABLE IF NOT EXISTS upload_session (
+  id           TEXT PRIMARY KEY,               -- 32 hex chars, unguessable
+  filename     TEXT NOT NULL,
+  mime         TEXT NOT NULL,
+  size_bytes   INTEGER NOT NULL CHECK (size_bytes > 0 AND size_bytes <= 26214400),
+  part_count   INTEGER NOT NULL CHECK (part_count BETWEEN 1 AND 8),
+  parts_done   INTEGER[] NOT NULL DEFAULT '{}',
+  status       TEXT NOT NULL DEFAULT 'uploading' CHECK (status IN ('uploading', 'ready', 'rejected', 'linked')),
+  ip_hash      TEXT,
+  lead_id      BIGINT REFERENCES lead(id) ON DELETE CASCADE,
+  created_at   TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS upload_session_ip_idx ON upload_session (ip_hash, created_at);
+ALTER TABLE lead_file ADD COLUMN IF NOT EXISTS part_count INTEGER NOT NULL DEFAULT 1;
+ALTER TABLE outbox ADD COLUMN IF NOT EXISTS next_attempt_at TIMESTAMPTZ NOT NULL DEFAULT now();
+INSERT INTO consent_text (version, body) VALUES
+  ('contact-v1', 'I agree that Graphics Library, Inc. may use my details to respond to this enquiry, as described in the Privacy Notice.')
+ON CONFLICT (version) DO NOTHING;

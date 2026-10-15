@@ -10,6 +10,7 @@ import { ChatButton } from "@/components/layout/chat-button";
 import { HideOn } from "@/components/layout/hide-on";
 import { chatChannels, hoursText } from "@/components/layout/channels";
 import { ConsentManager } from "@/components/consent/consent-manager";
+import { AttributionCapture } from "@/components/forms/attribution-capture";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl()),
@@ -50,6 +51,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <HideOn paths={["/quote"]}>
           <ChatButton channels={chatChannels()} hours={hoursText()} />
         </HideOn>
+        <AttributionCapture />
         <ConsentManager gtmId={process.env.NEXT_PUBLIC_GTM_ID || undefined} />
       </body>
     </html>

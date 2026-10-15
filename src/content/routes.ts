@@ -5,8 +5,6 @@
 export type RouteDef = { path: string; title: string; parent?: string; batch: number };
 
 export const LAUNCH_ROUTES: RouteDef[] = [
-  { path: "/contact", title: "Contact", batch: 4 },
-  { path: "/quote", title: "Request a Quote", batch: 4 },
   { path: "/admin", title: "Admin", batch: 5 },
 ];
 
