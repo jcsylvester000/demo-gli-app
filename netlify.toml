@@ -1,0 +1,32 @@
+# Next.js on Netlify needs the Next.js Runtime. It is pinned explicitly (auto-detection can be skipped,
+# which serves a bare 404 on every URL).
+[build]
+  # Creates/updates database tables (idempotent), then builds.
+  command = "npm run build:netlify"
+  publish = ".next"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+[build.environment]
+  NODE_VERSION = "22"
+  NEXT_TELEMETRY_DISABLED = "1"
+
+# Environment variables (Netlify → Site configuration → Environment variables). Never commit values.
+#   DATABASE_URL            Neon *pooled* connection string                       (required)
+#   IP_HASH_SALT            random string, used to rate-limit forms               (required from Batch 4)
+#   NEXT_PUBLIC_GTM_ID      Google Tag Manager container, e.g. GTM-XXXXXXX        (optional; banner + GTM off without it)
+# Later batches add: BETTER_AUTH_SECRET, BETTER_AUTH_URL, RESEND_API_KEY, LEAD_FROM_EMAIL, SALES_INBOX,
+#   TURNSTILE_SITE_KEY / NEXT_PUBLIC_TURNSTILE_SITE_KEY, TURNSTILE_SECRET_KEY.
+# Real domain only: ALLOW_INDEXING = true and NEXT_PUBLIC_SITE_URL = https://your-domain
+# (deploy previews and *.netlify.app stay noindex automatically).
+
+[[headers]]
+  for = "/brand/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/images/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"

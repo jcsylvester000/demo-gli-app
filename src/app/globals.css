@@ -1,0 +1,109 @@
+@import "tailwindcss";
+
+/* GLI design tokens (Brand Kit §3, §4, §8). Components use these tokens only; no hard-coded hex values. */
+@theme {
+  --color-gli-blue: #005aa9;
+  --color-gli-navy: #00306b;
+  --color-gli-ink: #0b1b33;
+  --color-gli-signal: #3883c6;
+  --color-gli-sky: #8dbce7;
+  --color-gli-tint: #e3eef9;
+  --color-gli-mist: #f4f7fb;
+  --color-gli-slate: #56606e;
+  --color-gli-line: #d5dee9;
+  --color-gli-yellow: #ffc20e;
+  /* Print-process colours, used only in the CMYK colour bar motif */
+  --color-cmyk-c: #00a3e0;
+  --color-cmyk-m: #e6007e;
+  --color-cmyk-y: #ffc20e;
+  --color-cmyk-k: #0b1b33;
+
+  /* shadcn/ui semantic mapping */
+  --color-background: #ffffff;
+  --color-foreground: var(--color-gli-ink);
+  --color-primary: var(--color-gli-blue);
+  --color-primary-foreground: #ffffff;
+  --color-accent: var(--color-gli-yellow);
+  --color-accent-foreground: var(--color-gli-ink);
+  --color-muted: var(--color-gli-mist);
+  --color-muted-foreground: var(--color-gli-slate);
+  --color-border: var(--color-gli-line);
+  --color-ring: var(--color-gli-blue);
+
+  --font-heading: var(--font-barlow), Arial, sans-serif;
+  --font-body: var(--font-source-sans), Arial, sans-serif;
+  --radius: 0.625rem;
+  --container-site: 75rem; /* 1200 px */
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: 6rem;
+  }
+  body {
+    background: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-body);
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    overflow-x: clip;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, h4 {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    line-height: 1.12;
+    color: var(--color-gli-navy);
+    text-wrap: balance;
+  }
+  :focus-visible {
+    outline: 3px solid var(--color-gli-blue);
+    outline-offset: 2px;
+  }
+  .on-dark :focus-visible {
+    outline-color: var(--color-gli-yellow);
+  }
+}
+
+@layer components {
+  .container-site {
+    margin-inline: auto;
+    width: 100%;
+    max-width: var(--container-site);
+    padding-inline: 1rem;
+  }
+  @media (min-width: 768px) {
+    .container-site { padding-inline: 1.5rem; }
+  }
+  /* Eyebrow: Barlow 600 caps, +12% tracking */
+  .eyebrow {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 0.8125rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  /* Letter-spaced wordmark: Barlow 500 small caps, +40% tracking (footer band and covers only) */
+  .wordmark {
+    font-family: var(--font-heading);
+    font-weight: 500;
+    font-variant: small-caps;
+    letter-spacing: 0.4em;
+  }
+  .hairline { height: 1px; background: currentColor; opacity: 0.35; }
+  /* Ripple field: concentric white rings at ~7% opacity (never behind body text) */
+  .ripple-field {
+    background-image: repeating-radial-gradient(circle at 70% 40%, rgb(255 255 255 / 0.07) 0 1px, transparent 1px 28px);
+  }
+  .tabular { font-variant-numeric: tabular-nums; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
