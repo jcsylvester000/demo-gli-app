@@ -8,6 +8,9 @@ import { PageHero } from "@/components/layout/page-hero";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { RegMark } from "@/components/brand/print-marks";
 import { Counters } from "@/components/gli/counters";
+import { JsonLd } from "@/components/seo/json-ld";
+import { orgRef } from "@/lib/schema";
+import { siteUrl } from "@/lib/utils";
 
 export const revalidate = 300;
 export const metadata = pageMetadata({ title: ABOUT.seoTitle, description: ABOUT.meta, path: "/about" });
@@ -79,6 +82,7 @@ export default async function About() {
           </dl>
         </div>
       </section>
+      <JsonLd data={{ "@context": "https://schema.org", "@type": "AboutPage", name: ABOUT.seoTitle, url: `${siteUrl()}/about`, mainEntity: orgRef() }} />
     </>
   );
 }

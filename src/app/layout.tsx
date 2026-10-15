@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { barlow, sourceSans } from "@/lib/fonts";
 import { indexingAllowed, siteUrl } from "@/lib/utils";
+import { OG_IMAGE } from "@/lib/seo";
 import { UtilityBar } from "@/components/layout/utility-bar";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
@@ -24,8 +25,8 @@ export const metadata: Metadata = {
   applicationName: "Graphics Library, Inc.",
   robots: indexingAllowed() ? { index: true, follow: true } : { index: false, follow: false },
   icons: { icon: "/brand/gli-mark.svg" },
-  openGraph: { type: "website", locale: "en_PH", siteName: "Graphics Library, Inc." },
-  twitter: { card: "summary_large_image" },
+  openGraph: { type: "website", locale: "en_PH", siteName: "Graphics Library, Inc.", images: [OG_IMAGE] },
+  twitter: { card: "summary_large_image", images: [OG_IMAGE.url] },
 };
 
 export const viewport: Viewport = { themeColor: "#00306B", width: "device-width", initialScale: 1 };
@@ -45,7 +46,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
           <UtilityBar />
           <Header />
         </HideOn>
-        <main id="main" className="flex-1">
+        <main id="main" tabIndex={-1} className="flex-1 focus:outline-none">
           {children}
         </main>
         <HideOn paths={["/quote", "/admin"]}>

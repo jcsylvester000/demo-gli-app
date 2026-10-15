@@ -360,7 +360,7 @@ export function JobTicketForm() {
                       d.services.includes(s.slug) ? "border-gli-blue bg-gli-tint" : "border-gli-line hover:border-gli-signal",
                     )}
                   >
-                    <input type="checkbox" className="size-5 shrink-0 accent-gli-blue" checked={d.services.includes(s.slug)} onChange={() => toggle("services", s.slug)} />
+                    <input name="services" type="checkbox" className="size-5 shrink-0 accent-gli-blue" checked={d.services.includes(s.slug)} onChange={() => toggle("services", s.slug)} />
                     <span>{s.name}</span>
                   </label>
                 ))}
@@ -427,22 +427,22 @@ export function JobTicketForm() {
                   <span className={label}>
                     Event or launch date <span className="font-normal text-gli-slate">(optional)</span>
                   </span>
-                  <input type="date" className={field} value={d.eventDate} onChange={(e) => set("eventDate", e.target.value)} />
+                  <input name="eventDate" type="date" className={field} value={d.eventDate} onChange={(e) => set("eventDate", e.target.value)} />
                 </label>
                 <label className="block">
                   <span className={label}>Venue or delivery location</span>
-                  <input type="text" className={field} value={d.venue} onChange={(e) => set("venue", e.target.value)} placeholder="e.g. SMX Convention Center, Pasay" maxLength={200} />
+                  <input name="venue" type="text" className={field} value={d.venue} onChange={(e) => set("venue", e.target.value)} placeholder="e.g. SMX Convention Center, Pasay" maxLength={200} />
                 </label>
               </div>
             ) : (
               <label className="block">
                 <span className={label}>Delivery location</span>
-                <input type="text" className={field} value={d.venue} onChange={(e) => set("venue", e.target.value)} placeholder="e.g. Makati office" maxLength={200} />
+                <input name="venue" type="text" className={field} value={d.venue} onChange={(e) => set("venue", e.target.value)} placeholder="e.g. Makati office" maxLength={200} />
               </label>
             )}
             <label className="block">
               <span className={label}>{boothOnly ? "Booth size" : "Quantity / sizes"}</span>
-              <input
+              <input name="qtySizes"
                 type="text"
                 className={field}
                 value={d.qtySizes}
@@ -471,7 +471,7 @@ export function JobTicketForm() {
             <label className="block">
               <span className={label}>Tell us about the job</span>
               <span className="block text-[0.9375rem] text-gli-slate">What, who it&apos;s for, anything we must know.</span>
-              <textarea className={cn(field, "min-h-36 py-3")} value={d.notes} onChange={(e) => set("notes", e.target.value)} maxLength={4000} />
+              <textarea name="notes" className={cn(field, "min-h-36 py-3")} value={d.notes} onChange={(e) => set("notes", e.target.value)} maxLength={4000} />
             </label>
           </div>
 
@@ -496,7 +496,7 @@ export function JobTicketForm() {
               <FileUp aria-hidden="true" className="size-8 text-gli-blue" />
               <span className="font-heading text-lg font-semibold text-gli-navy">Drop your brief, artwork or floor plan here, or browse.</span>
               <span className="text-[0.9375rem] text-gli-slate">PDF, AI, PSD, JPG, PNG, ZIP · up to 25 MB each · stored privately</span>
-              <input
+              <input name="files"
                 type="file"
                 multiple
                 accept={ACCEPT_ATTR}
@@ -550,22 +550,22 @@ export function JobTicketForm() {
             <div className="grid gap-5 sm:grid-cols-2">
               <label className="block" id="f-name">
                 <span className={label}>Full name</span>
-                <input type="text" autoComplete="name" className={field} value={d.name} onChange={(e) => set("name", e.target.value)} maxLength={120} {...err("name")} />
+                <input name="name" type="text" autoComplete="name" className={field} value={d.name} onChange={(e) => set("name", e.target.value)} maxLength={120} {...err("name")} />
                 <FieldError id="name-error" msg={errors.name} />
               </label>
               <label className="block" id="f-company">
                 <span className={label}>Company</span>
-                <input type="text" autoComplete="organization" className={field} value={d.company} onChange={(e) => set("company", e.target.value)} maxLength={160} {...err("company")} />
+                <input name="company" type="text" autoComplete="organization" className={field} value={d.company} onChange={(e) => set("company", e.target.value)} maxLength={160} {...err("company")} />
                 <FieldError id="company-error" msg={errors.company} />
               </label>
               <label className="block" id="f-email">
                 <span className={label}>Work email</span>
-                <input type="email" autoComplete="email" inputMode="email" className={field} value={d.email} onChange={(e) => set("email", e.target.value)} maxLength={200} {...err("email")} />
+                <input name="email" type="email" autoComplete="email" inputMode="email" className={field} value={d.email} onChange={(e) => set("email", e.target.value)} maxLength={200} {...err("email")} />
                 <FieldError id="email-error" msg={errors.email} />
               </label>
               <label className="block" id="f-mobile">
                 <span className={label}>Mobile</span>
-                <input type="tel" autoComplete="tel" inputMode="tel" className={field} value={d.mobile} onChange={(e) => set("mobile", e.target.value)} placeholder="0917 123 4567" maxLength={30} {...err("mobile")} />
+                <input name="mobile" type="tel" autoComplete="tel" inputMode="tel" className={field} value={d.mobile} onChange={(e) => set("mobile", e.target.value)} placeholder="0917 123 4567" maxLength={30} {...err("mobile")} />
                 <FieldError id="mobile-error" msg={errors.mobile} />
               </label>
             </div>
@@ -582,7 +582,7 @@ export function JobTicketForm() {
             </fieldset>
             <div id="f-consent">
               <label className="flex items-start gap-3">
-                <input type="checkbox" className="mt-1 size-5 shrink-0 accent-gli-blue" checked={d.consent} onChange={(e) => set("consent", e.target.checked)} {...err("consent")} />
+                <input name="consent" type="checkbox" className="mt-1 size-5 shrink-0 accent-gli-blue" checked={d.consent} onChange={(e) => set("consent", e.target.checked)} {...err("consent")} />
                 <span>
                   I agree that Graphics Library, Inc. may use my details to respond to this request, as described in the{" "}
                   <Link href="/privacy" target="_blank" className="font-semibold text-gli-blue underline underline-offset-4">
@@ -594,12 +594,12 @@ export function JobTicketForm() {
               <FieldError id="consent-error" msg={errors.consent} />
             </div>
             <label className="flex items-start gap-3">
-              <input type="checkbox" className="mt-1 size-5 shrink-0 accent-gli-blue" checked={d.newsletter} onChange={(e) => set("newsletter", e.target.checked)} />
+              <input name="newsletter" type="checkbox" className="mt-1 size-5 shrink-0 accent-gli-blue" checked={d.newsletter} onChange={(e) => set("newsletter", e.target.checked)} />
               <span>Send me Show Floor Notes (4 emails a year). Optional.</span>
             </label>
             <div className="absolute -left-[9999px]" aria-hidden="true">
               <label>
-                Leave this empty <input type="text" tabIndex={-1} autoComplete="off" value={website} onChange={(e) => setWebsite(e.target.value)} />
+                Leave this empty <input name="website" type="text" tabIndex={-1} autoComplete="off" value={website} onChange={(e) => setWebsite(e.target.value)} />
               </label>
             </div>
             {step === 3 ? <Turnstile onToken={setToken} /> : null}

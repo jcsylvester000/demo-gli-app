@@ -92,7 +92,7 @@ export function ServicesGrid({ order, featured = order[0], cta = true }: { order
             className="on-dark ripple-field group flex h-full min-h-40 flex-col justify-between gap-4 bg-gli-blue p-6 text-white md:flex-row md:items-center"
           >
             <span>
-              <span className="eyebrow block text-[0.75rem] text-gli-yellow">Not sure what you need?</span>
+              <span className="eyebrow block text-[0.75rem] text-white">Not sure what you need?</span>
               <span className="mt-1 block font-heading text-2xl font-semibold">Start a job ticket and we&apos;ll help you scope it.</span>
             </span>
             <span className="inline-flex min-h-11 shrink-0 items-center gap-2 self-start rounded-[var(--radius)] border border-white px-4 font-heading font-semibold group-hover:bg-white group-hover:text-gli-navy md:self-center">

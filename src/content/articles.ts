@@ -8,12 +8,13 @@ export const INSIGHT_CATEGORIES = [
   { slug: "working-with-a-production-partner", name: "Working with a Production Partner" },
 ] as const;
 
-export type ArticleMeta = { slug: string; title: string; category: (typeof INSIGHT_CATEGORIES)[number]["slug"]; excerpt: string; readMins: number; published: string };
+export type ArticleMeta = { slug: string; title: string; category: (typeof INSIGHT_CATEGORIES)[number]["slug"]; excerpt: string; readMins: number; published: string; /** Only when "{title} | GLI Insights" would pass 60 characters (SEO Map rule). */ seoTitle?: string };
 
 export const ARTICLES: ArticleMeta[] = [
   {
     slug: "planning-a-medical-convention-booth-12-week-timeline",
     title: "Planning a medical-convention booth: a 12-week timeline",
+    seoTitle: "Medical-Convention Booth Planning: 12-Week Timeline | GLI",
     category: "conventions-and-booths",
     excerpt: "A week-by-week plan for a pharma booth at a Philippine medical convention, from brief and 3D render to install, show days and wrap-up.",
     readMins: 5,
@@ -22,6 +23,7 @@ export const ARTICLES: ArticleMeta[] = [
   {
     slug: "choosing-a-detail-aid-format",
     title: "2-pager, 6-pager or 14-pager: choosing a detail-aid format",
+    seoTitle: "2-, 6- or 14-Pager? Choosing a Detail-Aid Format | GLI",
     category: "pharma-materials",
     excerpt: "How to choose a detail-aid format for pharma reps: what 2-, 4-, 6-, 12- and 14-pagers and Master Detailer Pieces are best for.",
     readMins: 3,
@@ -30,6 +32,7 @@ export const ARTICLES: ArticleMeta[] = [
   {
     slug: "one-partner-or-five-vendors",
     title: "One partner or five vendors? What vendor sprawl really costs a launch",
+    seoTitle: "One Partner or Five Vendors? The Cost of Sprawl | GLI",
     category: "working-with-a-production-partner",
     excerpt: "Why splitting a launch across designers, printers, fabricators and event suppliers costs time and money, and how to judge a one-team partner.",
     readMins: 3,

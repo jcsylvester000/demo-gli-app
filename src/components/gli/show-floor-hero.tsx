@@ -48,7 +48,7 @@ export function ShowFloorHero({
       <Ripple className="left-[78%] top-1/2" />
       <div className="container-site relative grid items-center gap-12 py-14 md:py-20 lg:grid-cols-[1.05fr_1fr] lg:py-24">
         <div>
-          <p className="eyebrow text-gli-yellow">{eyebrow}</p>
+          <p className="eyebrow text-white">{eyebrow}</p>
           <h1 className="mt-4 text-[2.5rem] leading-[1.04] text-white md:text-[3.5rem]">
             {h1Lead}{" "}
             <span className="relative inline-block whitespace-nowrap">

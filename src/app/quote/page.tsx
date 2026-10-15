@@ -5,11 +5,14 @@ import { Breadcrumbs } from "@/components/layout/breadcrumbs";
 import { RegMark } from "@/components/brand/print-marks";
 import { JobTicketForm } from "@/components/forms/job-ticket-form";
 
-export const metadata = pageMetadata({
-  title: "Request a Quote | Start a Job Ticket | GLI",
-  description: "Tell us what you need in four short steps and upload your brief. You get a ticket number straight away and a reply from a producer.",
-  path: "/quote",
-});
+export async function generateMetadata() {
+  const promise = responsePromiseFor(await getContact());
+  return pageMetadata({
+    title: "Request a Quote | Start a Job Ticket | GLI",
+    description: `Tell us what you need in four short steps and upload your brief. You get a ticket number and a reply${promise || " from a producer"}.`,
+    path: "/quote",
+  });
+}
 
 /** /quote (BRD P-30). No CTA band or floating chat here (layout hides them). */
 export const revalidate = 300;

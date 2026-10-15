@@ -8,6 +8,8 @@ import { Counters } from "@/components/gli/counters";
 import { WorkBrowser } from "@/components/gli/work-browser";
 import { HOME } from "@/content/home";
 import { cn } from "@/lib/utils";
+import { JsonLd } from "@/components/seo/json-ld";
+import { collectionPage } from "@/lib/schema";
 
 export async function workPages() {
   const g = await getGovernance();
@@ -53,6 +55,7 @@ export async function WorkListing({ page }: { page: number }) {
           <WorkBrowser all={all} pageItems={pageItems} pagination={pagination} emptyText={WORK_HUB.empty} />
         </div>
       </section>
+      <JsonLd data={collectionPage("GLI work", page === 1 ? "/work" : `/work/page/${page}`, pageItems.map((c) => ({ name: c.title, path: `/work/${c.slug}` })))} />
     </>
   );
 }

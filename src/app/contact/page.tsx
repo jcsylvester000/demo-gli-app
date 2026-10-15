@@ -4,6 +4,7 @@ import { getContact } from "@/lib/server/site-settings";
 import { chatChannels } from "@/components/layout/channels";
 import { pageMetadata } from "@/lib/seo";
 import { siteUrl } from "@/lib/utils";
+import { localBusiness } from "@/lib/schema";
 import { Breadcrumbs } from "@/components/layout/breadcrumbs";
 import { PageHero } from "@/components/layout/page-hero";
 import { JsonLd } from "@/components/seo/json-ld";
@@ -12,11 +13,15 @@ import { buttonClass } from "@/components/ui/button";
 import { ContactForm } from "@/components/forms/contact-form";
 import { MapEmbed } from "@/components/forms/map-embed";
 
-export const metadata = pageMetadata({
-  title: "Contact GLI | Manila Print, Booth & Event Production",
-  description: "Call, email or message GLI. Office details, hours and a short contact form, or start a job ticket for a project.",
-  path: "/contact",
-});
+export async function generateMetadata() {
+  const c = await getContact();
+  const promise = responsePromiseFor(c);
+  return pageMetadata({
+    title: "Contact GLI | Manila Print, Booth & Event Production",
+    description: `Call, email or message GLI on Viber or Messenger. Office address, hours and a map.${promise ? ` We reply${promise}.` : " Or start a job ticket for a project."}`,
+    path: "/contact",
+  });
+}
 
 /** Contact (BRD FR-070). Contact details render only once GLI confirms them (Q-02); the form always works. */
 export const revalidate = 300;
@@ -32,17 +37,15 @@ export default async function ContactPage() {
 
   const schema = {
     "@context": "https://schema.org",
-    "@type": "LocalBusiness",
-    "@id": `${siteUrl()}/#localbusiness`,
-    name: "Graphics Library, Inc.",
-    alternateName: "GLI",
-    url: siteUrl(),
-    logo: `${siteUrl()}/brand/gli-mark.svg`,
-    foundingDate: "1996",
-    areaServed: { "@type": "Country", name: "Philippines" },
-    ...(address ? { address: { "@type": "PostalAddress", streetAddress: address, addressRegion: "Metro Manila", addressCountry: "PH" } } : {}),
-    ...(tel ? { telephone: links.telLabel() } : {}),
-    ...(email ? { email: CONTACT.email.value } : {}),
+    "@type": "ContactPage",
+    name: "Contact GLI",
+    url: `${siteUrl()}/contact`,
+    mainEntity: localBusiness({
+      ...(address ? { address: { "@type": "PostalAddress", streetAddress: address, addressRegion: "Metro Manila", addressCountry: "PH" } } : {}),
+      ...(tel ? { telephone: links.telLabel() } : {}),
+      ...(email ? { email: CONTACT.email.value } : {}),
+      ...(hours ? { description: `Business hours: ${hours}` } : {}),
+    }),
   };
 
   return (

@@ -8,7 +8,7 @@ import { serviceBySlug } from "@/content/services";
 import { clientBySlug } from "@/content/clients";
 import { approvedTestimonials, caseVisible, resolveCase, visibleCases } from "@/lib/gate";
 import { getGovernance } from "@/lib/server/governance";
-import { pageMetadata } from "@/lib/seo";
+import { fitTitle, pageMetadata } from "@/lib/seo";
 import { Breadcrumbs } from "@/components/layout/breadcrumbs";
 import { CmykBar } from "@/components/brand/print-marks";
 import { buttonClass } from "@/components/ui/button";
@@ -17,6 +17,9 @@ import { CaseCard } from "@/components/gli/case-card";
 import { ProofImage, TypeThumb } from "@/components/gli/proof-image";
 import { SignOffTestimonial } from "@/components/gli/sign-off-testimonial";
 import { TrackView } from "@/components/gli/track-view";
+import { JsonLd } from "@/components/seo/json-ld";
+import { orgRef } from "@/lib/schema";
+import { siteUrl } from "@/lib/utils";
 
 export const revalidate = 300;
 export const generateStaticParams = () => CASES.map((c) => ({ slug: c.slug }));
@@ -35,8 +38,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const r = await load((await params).slug);
   if (!r) return { title: "Not found", robots: { index: false } };
   const { item } = r;
-  const desc = `${item.delivered} for ${item.clientLabel.toLowerCase().startsWith("a ") ? item.clientLabel.charAt(0).toLowerCase() + item.clientLabel.slice(1) : item.clientLabel}. ${item.where}.`;
-  return pageMetadata({ title: `${item.title} | GLI Work`.slice(0, 70), description: desc.slice(0, 160), path: `/work/${item.slug}` });
+  const client = item.named ? item.clientLabel : item.clientLabel.charAt(0).toLowerCase() + item.clientLabel.slice(1);
+  // SEO Map pattern: "[Project] for [Client] | GLI Work" / "[What GLI delivered] for [client] at [venue], [year]: …"
+  const title = fitTitle(...(item.named ? [`${item.title} for ${item.clientLabel} | GLI Work`] : []), `${item.title} | GLI Work`, `${item.title} | GLI`, item.title);
+  const desc = `${item.delivered} for ${client} at ${item.where}${item.yearLabel ? `, ${item.yearLabel}` : ""}. See the brief and the work.`;
+  return pageMetadata({ title, description: desc.slice(0, 160), path: `/work/${item.slug}` });
 }
 
 /** Case-study template (BRD FR-031): title, spec strip, hero, brief, delivered gallery, optional outcome/testimonial, related, CTA. */
@@ -61,6 +67,18 @@ export default async function CasePage({ params }: Props) {
         ]}
       />
       <TrackView event="case_view" params={{ case: item.slug }} />
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "CreativeWork",
+          name: item.title,
+          url: `${siteUrl()}/work/${item.slug}`,
+          abstract: item.brief,
+          creator: orgRef(),
+          ...(item.year ? { dateCreated: String(item.year) } : {}),
+          ...(item.images[0] ? { image: `${siteUrl()}${item.images[0].src.src}` } : {}),
+        }}
+      />
 
       <section className="on-dark ripple-field bg-gli-navy text-white">
         <div className="container-site grid items-center gap-10 py-12 md:py-16 lg:grid-cols-[1.1fr_1fr]">

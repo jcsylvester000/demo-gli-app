@@ -9,6 +9,8 @@ import { clientBySlug } from "@/content/clients";
 import { approvedTestimonials, clientStatus, featuredCases, nameableClients } from "@/lib/gate";
 import { getGovernance } from "@/lib/server/governance";
 import { siteUrl } from "@/lib/utils";
+import { OG_IMAGE } from "@/lib/seo";
+import { localBusiness } from "@/lib/schema";
 import { JsonLd } from "@/components/seo/json-ld";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { RegMark } from "@/components/brand/print-marks";
@@ -28,7 +30,8 @@ export const metadata: Metadata = {
   title: { absolute: HOME.seoTitle },
   description: HOME.metaDescription,
   alternates: { canonical: "/" },
-  openGraph: { title: HOME.seoTitle, description: HOME.metaDescription, url: "/" },
+  openGraph: { title: HOME.seoTitle, description: HOME.metaDescription, url: "/", type: "website", locale: "en_PH", siteName: "Graphics Library, Inc.", images: [OG_IMAGE] },
+  twitter: { card: "summary_large_image", title: HOME.seoTitle, description: HOME.metaDescription, images: [OG_IMAGE.url] },
 };
 
 export default async function Home() {
@@ -59,6 +62,7 @@ export default async function Home() {
         inLanguage: "en-PH",
         publisher: { "@id": `${siteUrl()}/#organization` },
       },
+      localBusiness(),
     ],
   };
 

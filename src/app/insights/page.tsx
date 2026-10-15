@@ -3,6 +3,10 @@ import { pageMetadata } from "@/lib/seo";
 import { Breadcrumbs } from "@/components/layout/breadcrumbs";
 import { PageHero } from "@/components/layout/page-hero";
 import { InsightsListing } from "@/components/pages/insights-listing";
+import { JsonLd } from "@/components/seo/json-ld";
+import { ARTICLES } from "@/content/articles";
+import { orgRef } from "@/lib/schema";
+import { siteUrl } from "@/lib/utils";
 
 export const metadata = pageMetadata({ title: INSIGHTS_HUB.seoTitle, description: INSIGHTS_HUB.meta, path: "/insights" });
 
@@ -18,6 +22,16 @@ export default function InsightsHub() {
         proof="Written by people who print, build and stage, since 1996"
       />
       <InsightsListing path="/insights" />
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "Blog",
+          name: "GLI Insights",
+          url: `${siteUrl()}/insights`,
+          publisher: orgRef(),
+          blogPost: ARTICLES.map((a) => ({ "@type": "BlogPosting", headline: a.title, url: `${siteUrl()}/insights/${a.slug}`, datePublished: a.published })),
+        }}
+      />
     </>
   );
 }

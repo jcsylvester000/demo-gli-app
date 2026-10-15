@@ -14,7 +14,8 @@ export function InsightsListing({ category, path }: { category?: string; path: s
       on ? "border-gli-blue bg-gli-blue text-white" : "border-gli-line bg-white text-gli-navy hover:border-gli-blue hover:text-gli-blue",
     );
   return (
-    <section aria-label="Articles" className="bg-white">
+    <section aria-labelledby="articles-title" className="bg-white">
+      <h2 id="articles-title" className="sr-only">Articles</h2>
       <div className="container-site grid gap-12 py-12 md:py-16 lg:grid-cols-[1fr_22rem]">
         <div>
           <nav aria-label="Insight categories">

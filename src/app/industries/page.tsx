@@ -5,6 +5,8 @@ import { pageMetadata } from "@/lib/seo";
 import { Breadcrumbs } from "@/components/layout/breadcrumbs";
 import { PageHero } from "@/components/layout/page-hero";
 import { RegMark } from "@/components/brand/print-marks";
+import { JsonLd } from "@/components/seo/json-ld";
+import { listPage } from "@/lib/schema";
 
 export const metadata = pageMetadata({ title: INDUSTRIES_HUB.seoTitle, description: INDUSTRIES_HUB.meta, path: "/industries" });
 
@@ -35,6 +37,7 @@ export default function IndustriesHub() {
           </ul>
         </div>
       </section>
+      <JsonLd data={listPage("Industries GLI serves", "/industries", INDUSTRY_PAGES.map((i) => ({ name: i.name, path: `/industries/${i.slug}` })))} />
     </>
   );
 }

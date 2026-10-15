@@ -66,6 +66,7 @@ export const COMPANY_LINKS = [
   { href: "/about/clients", label: "Clients" },
   { href: "/work", label: "Work" },
   { href: "/insights", label: "Insights" },
+  { href: "/faq", label: "FAQ" },
 ] as const;
 
 export const LEGAL_LINKS = [

@@ -2,6 +2,9 @@ import { z } from "zod";
 import { ALL_SERVICES, INDUSTRIES } from "@/content/site";
 import { PRODUCTS } from "@/content/products";
 
+// Strict CSP has no unsafe-eval: stop Zod v4 probing with Function("") (Lighthouse inspector issue).
+z.config({ jitless: true });
+
 /** Shared validation for the job ticket and contact form (browser + server). Messages: Document 4 §10. */
 export const MSG = {
   service: "Please tell us which service you need.",

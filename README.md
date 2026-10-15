@@ -27,6 +27,9 @@ Checks: `npm run check` (lint + types + build).
    - Lead capture (Batch 4): `RESEND_API_KEY`, `LEAD_FROM_EMAIL` (e.g. `GLI Job Tickets <tickets@your-domain>`; verify the
      domain in Resend for SPF/DKIM/DMARC), `SALES_INBOX` (comma-separated), `NEXT_PUBLIC_TURNSTILE_SITE_KEY` +
      `TURNSTILE_SECRET_KEY` (Cloudflare Turnstile), `CRON_SECRET` (16+ random characters), optional `TEAM_ALERT_WEBHOOK_URL`.
+   - Admin (Batch 5): `BETTER_AUTH_SECRET` (32+ random characters), `BETTER_AUTH_URL` (the site's public URL, no trailing
+     slash), optional `ADMIN_INITIAL_PASSWORD`.
+   - SEO (Batch 6, real domain only): `ALLOW_INDEXING=true`, `NEXT_PUBLIC_SITE_URL=https://<domain>`, optional `INDEXNOW_KEY`.
 3. Deploy. Every push to `main` redeploys; the migration runs first on every build.
 4. Check `https://<site>.netlify.app/api/health` → `{"ok":true,"db":"ok"}`.
 
@@ -45,7 +48,7 @@ The site stays `noindex` until the real domain is live: then set `ALLOW_INDEXING
 
 ## Admin (Batch 5)
 
-- Sign in at `/admin/login`. The public footer links there with a deliberately discreet mark (⌖) after the copyright line.
+- Sign in at `/admin/login`. The public footer links there with a tiny registration mark after the copyright line.
 - First account: username `Admin`, temporary password `Admin1234` (or `ADMIN_INITIAL_PASSWORD`), created by `db:migrate`
   on an empty database. It must be changed at first sign-in. Turn on two-step verification under My account.
 - Roles: **Sales** (leads, files), **Editor** (case studies, prices and lead times, contact details, style guide; no lead
@@ -55,21 +58,25 @@ The site stays `noindex` until the real domain is live: then set `ALLOW_INDEXING
   CSV export (Admin) and erase for data-subject requests (Admin).
 - Publishing changes (permissions, cases, testimonials, prices, contact details, redirects) refresh the public site
   within seconds (cache tag `governance`).
-- Locked out after 5 failed sign-ins for 15 minutes. If the only Admin forgets their password, run
-  `npm run db:migrate` against an empty `user` table or ask the developer to reset it.
+- Locked out after 5 failed sign-ins for 15 minutes.
+- **Password reset:** an Admin sets a temporary password for anyone under Team → *Reset password*; share it privately. The person
+  must change it at next sign-in. If the only Admin is locked out (or lost their two-step device), set
+  `ADMIN_RECOVERY_USERNAME=admin` and `ADMIN_INITIAL_PASSWORD=<temporary>` in Netlify and redeploy: the build resets that
+  account once (temporary password, sessions ended, two-step off). Then remove both variables.
 
 ## Structure
 
 ```
 src/app/                 routes (pages, API, robots, sitemap)
-src/app/(site)/[...slug] temporary placeholders for launch URLs not built yet (noindex)
+src/app/(site)/[...slug] catch-all: admin redirects (308/307) or the branded 404
 src/components/brand     logo, print-heritage motifs (crop marks, CMYK bar, registration mark, brush underline)
 src/components/layout    utility bar, header + mega-menu, footer, chat button, breadcrumbs, CTA band
 src/components/consent   cookie banner + consent-gated GTM
-src/content/             site facts, navigation, launch routes (typed)
+src/content/             all page copy, cases, products, articles (typed; Document 4)
+src/app/admin/           admin dashboard (Better Auth, roles, audit log)
 src/lib/server/pool.ts   Neon connection (never throws at import)
 db/schema.sql            all tables (idempotent)
-scripts/db-migrate.ts    runs schema.sql (on every Netlify build)
+scripts/db-migrate.ts    runs schema.sql + auth tables, seeds the first Admin (on every Netlify build)
 ```
 
 ## Rules

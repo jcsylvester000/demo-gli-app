@@ -13,7 +13,7 @@ export async function UtilityBar() {
   const email = links.email();
   const item = "inline-flex min-h-8 items-center gap-1.5 hover:text-white";
   return (
-    <div className="on-dark hidden bg-gli-navy text-[0.875rem] text-gli-sky md:block">
+    <aside aria-label="Quick contact" className="on-dark hidden bg-gli-navy text-[0.875rem] text-gli-sky md:block">
       <div className="container-site flex h-9 items-center justify-between gap-4">
         <p className="eyebrow text-[0.75rem] text-gli-sky">Graphics Library, Inc. · Since 1996</p>
         <ul className="flex items-center gap-5">
@@ -47,6 +47,6 @@ export async function UtilityBar() {
           ) : null}
         </ul>
       </div>
-    </div>
+    </aside>
   );
 }

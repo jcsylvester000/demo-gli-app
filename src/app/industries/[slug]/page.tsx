@@ -14,6 +14,9 @@ import { SectionHeading } from "@/components/ui/section-heading";
 import { MarkList } from "@/components/pages/list-with-marks";
 import { CaseCard } from "@/components/gli/case-card";
 import { SignOffTestimonial } from "@/components/gli/sign-off-testimonial";
+import { JsonLd } from "@/components/seo/json-ld";
+import { orgRef } from "@/lib/schema";
+import { siteUrl } from "@/lib/utils";
 
 export const revalidate = 300;
 export const generateStaticParams = () => INDUSTRY_PAGES.map((i) => ({ slug: i.slug }));
@@ -122,6 +125,18 @@ export default async function IndustryPage({ params }: Props) {
           </div>
         </section>
       ) : null}
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "Service",
+          name: `Marketing production for ${i.name}`,
+          url: `${siteUrl()}/industries/${i.slug}`,
+          description: resolveText(g, i.meta),
+          provider: orgRef(),
+          areaServed: { "@type": "Country", name: "Philippines" },
+          audience: { "@type": "BusinessAudience", name: i.name },
+        }}
+      />
     </>
   );
 }

@@ -18,7 +18,7 @@ export function ProcessTimeline({ steps }: { steps: Step[] }) {
           <span className="absolute left-0 top-0 grid size-6 place-items-center rounded-full bg-white text-gli-blue">
             <RegMark className="size-6" />
           </span>
-          <p className="tabular font-heading text-sm font-semibold text-gli-signal">{s.n}</p>
+          <p className="tabular font-heading text-sm font-semibold text-gli-blue">{s.n}</p>
           <h3 className="mt-0.5 text-xl">{s.title}</h3>
           <p className="mt-2 text-[0.9375rem] leading-6 text-gli-slate">{s.body}</p>
         </li>

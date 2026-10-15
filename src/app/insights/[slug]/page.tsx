@@ -28,8 +28,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const a = ARTICLES.find((x) => x.slug === slug);
   if (!a) return {};
-  const m = pageMetadata({ title: `${a.title} | GLI`.slice(0, 70), description: a.excerpt, path: `/insights/${a.slug}` });
-  return { ...m, openGraph: { ...m.openGraph, type: "article", publishedTime: a.published } };
+  const m = pageMetadata({ title: a.seoTitle ?? `${a.title} | GLI Insights`, description: a.excerpt, path: `/insights/${a.slug}` });
+  return { ...m, openGraph: { ...m.openGraph, type: "article", publishedTime: a.published, modifiedTime: ARTICLE_BODIES[a.slug]?.updated ?? a.published } };
 }
 
 /** Article template (BRD FR-051): author box, table of contents, inline CTA, related articles, Article schema. */

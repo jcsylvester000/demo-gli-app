@@ -43,6 +43,10 @@ const nextConfig: NextConfig = {
     NEXT_PUBLIC_SITE_URL: siteUrl,
     NEXT_PUBLIC_ALLOW_INDEXING: allowIndexing ? "true" : "false",
   },
+  async rewrites() {
+    const key = process.env.INDEXNOW_KEY;
+    return key && /^[A-Za-z0-9-]{8,128}$/.test(key) ? [{ source: `/${key}.txt`, destination: "/api/indexnow-key" }] : [];
+  },
   async headers() {
     return [
       { source: "/:path*", headers: securityHeaders },

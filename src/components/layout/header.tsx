@@ -24,6 +24,7 @@ export function Header() {
   const [megaOpen, setMegaOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   // A mouse user's hover opens the menu just before their click lands; that click should keep it open, not toggle it shut.
@@ -97,9 +98,14 @@ export function Header() {
       }
     };
     document.addEventListener("keydown", onKey);
+    // Move focus into the panel; hand it back to the menu button on close (WCAG 2.4.3).
+    const raf = requestAnimationFrame(() => document.getElementById("mobile-menu")?.querySelector<HTMLElement>("a[href], button")?.focus());
+    const opener = menuButtonRef.current;
     return () => {
+      cancelAnimationFrame(raf);
       document.body.style.overflow = prev;
       document.removeEventListener("keydown", onKey);
+      opener?.focus();
     };
   }, [mobileOpen]);
 
@@ -117,7 +123,7 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 border-b border-gli-line bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/85">
       <div className="container-site flex h-16 items-center justify-between gap-4 lg:h-[4.5rem]">
-        <Link href="/" className="rounded-sm" aria-label="Graphics Library, Inc. home">
+        <Link href="/" className="rounded-sm">
           <LogoLockup />
         </Link>
 
@@ -173,7 +179,7 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <Link href="/quote" className={buttonClass("primary", "md", "hidden sm:inline-flex")}>
+          <Link href="/quote" prefetch={false} className={buttonClass("primary", "md", "hidden sm:inline-flex")}>
             Request a Quote
             <QuoteCount />
           </Link>
@@ -182,6 +188,7 @@ export function Header() {
             className="inline-flex size-11 items-center justify-center rounded-[var(--radius)] text-gli-navy hover:bg-gli-mist lg:hidden"
             aria-expanded={mobileOpen}
             aria-controls="mobile-menu"
+            ref={menuButtonRef}
             onClick={() => setMobileOpen(true)}
           >
             <Menu aria-hidden="true" className="size-6" />
@@ -241,7 +248,7 @@ export function Header() {
         ? createPortal(
             <div id="mobile-menu" role="dialog" aria-modal="true" aria-label="Menu" className="fixed inset-0 z-[70] flex flex-col bg-white lg:hidden">
               <div className="container-site flex h-16 items-center justify-between border-b border-gli-line">
-                <Link href="/" aria-label="Graphics Library, Inc. home" onClick={() => setMobileOpen(false)}>
+                <Link href="/" onClick={() => setMobileOpen(false)}>
                   <LogoLockup />
                 </Link>
                 <button

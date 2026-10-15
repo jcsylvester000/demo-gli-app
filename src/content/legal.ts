@@ -19,7 +19,7 @@ export const FAQ_PAGE = {
 
 export const PRIVACY = {
   seoTitle: "Privacy Notice | GLI",
-  meta: "How Graphics Library, Inc. collects, uses and protects personal data under the Data Privacy Act of 2012 (RA 10173).",
+  meta: "How Graphics Library, Inc. collects and uses personal data under the Data Privacy Act of 2012 (RA 10173).",
   h1: "Privacy notice",
   sections: [
     {

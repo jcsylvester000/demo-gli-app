@@ -16,13 +16,15 @@ import { CLIENTS } from "@/content/clients";
 import { CASES } from "@/content/cases";
 import { PRODUCTS } from "@/content/products";
 import { EDITABLE_CONTACT_FIELDS } from "@/content/site";
+import { pingIndexNow } from "@/lib/server/indexnow";
 
 export type ActionState = { ok?: boolean; error?: string; message?: string; data?: Record<string, unknown> };
 
 /** Public pages read governance data through the "governance" cache tag: refresh it right after any change. */
-function refreshPublicSite() {
+function refreshPublicSite(changed: string[] = []) {
   updateTag(GOVERNANCE_TAG);
   revalidatePath("/", "layout");
+  if (changed.length) pingIndexNow(changed);
 }
 
 const fail = (e: unknown): ActionState => ({ error: (e as Error).message === "Not authorised" ? "You don't have permission to do that." : (e as Error).message || "Something went wrong." });
@@ -160,7 +162,7 @@ export async function setClientPermission(_prev: ActionState, fd: FormData): Pro
       [c.slug, c.name, c.industry, d.status, d.date, d.note || null, me.id],
     );
     await audit(me.id, `client.permission.${d.status}`, `client:${c.slug}`);
-    refreshPublicSite();
+    refreshPublicSite(["/", "/about/clients", `/industries/${c.industry}`]);
     return { ok: true, message: `${c.name}: saved.` };
   } catch (e) {
     return e instanceof z.ZodError ? { error: e.issues[0]?.message } : fail(e);
@@ -193,7 +195,7 @@ export async function setCaseStatus(_prev: ActionState, fd: FormData): Promise<A
       [c.slug, d.workflow, c.rx, rxCleared, me.id],
     );
     await audit(me.id, `case.${d.workflow}${rxCleared ? ".rx_cleared" : ""}`, `case:${c.slug}`);
-    refreshPublicSite();
+    refreshPublicSite([`/work/${c.slug}`, "/work", "/"]);
     return { ok: true, message: `${c.title}: ${d.workflow.replace("_", " ")}.` };
   } catch (e) {
     return e instanceof z.ZodError ? { error: e.issues[0]?.message } : fail(e);
@@ -279,7 +281,7 @@ export async function setProductSetting(_prev: ActionState, fd: FormData): Promi
       [d.slug, centavos, d.leadTime],
     );
     await audit(me.id, "product.updated", `product:${d.slug}`);
-    refreshPublicSite();
+    refreshPublicSite([`/products/${d.slug}`, "/products"]);
     return { ok: true, message: "Saved." };
   } catch (e) {
     return e instanceof z.ZodError ? { error: e.issues[0]?.message } : fail(e);

@@ -8,6 +8,9 @@ import { Breadcrumbs } from "@/components/layout/breadcrumbs";
 import { PageHero } from "@/components/layout/page-hero";
 import { ServicesGrid } from "@/components/gli/services-grid";
 import { SectionHeading } from "@/components/ui/section-heading";
+import { JsonLd } from "@/components/seo/json-ld";
+import { listPage } from "@/lib/schema";
+import { ALL_SERVICES } from "@/content/site";
 
 export const metadata = pageMetadata({ title: SERVICES_HUB.seoTitle, description: SERVICES_HUB.meta, path: "/services" });
 
@@ -16,8 +19,9 @@ export default function ServicesHub() {
     <>
       <Breadcrumbs items={[{ name: "Services", href: "/services" }]} />
       <PageHero eyebrow="Our services" title={SERVICES_HUB.h1} intro={SERVICES_HUB.intro} secondary={{ label: "See the work", href: "/work" }} />
-      <section aria-label="All services" className="bg-gli-mist">
+      <section aria-labelledby="all-services-title" className="bg-gli-mist">
         <div className="container-site py-14 md:py-20">
+          <h2 id="all-services-title" className="sr-only">All services</h2>
           <ServicesGrid order={HOME_SERVICE_ORDER} />
         </div>
       </section>
@@ -46,6 +50,7 @@ export default function ServicesHub() {
           </div>
         </div>
       </section>
+      <JsonLd data={listPage("GLI services", "/services", ALL_SERVICES.map((s) => ({ name: s.name, path: `/services/${s.slug}` })))} />
     </>
   );
 }

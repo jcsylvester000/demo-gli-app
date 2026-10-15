@@ -71,12 +71,12 @@ export function ContactForm() {
       <div className="grid gap-5 sm:grid-cols-2">
         <label className="block">
           <span className="font-heading font-semibold text-gli-navy">Name</span>
-          <input className={field} autoComplete="name" value={v.name} onChange={(e) => set("name", e.target.value)} maxLength={120} {...err("name")} />
+          <input name="name" className={field} autoComplete="name" value={v.name} onChange={(e) => set("name", e.target.value)} maxLength={120} {...err("name")} />
           <FieldError id="c-name-error" msg={errors.name} />
         </label>
         <label className="block">
           <span className="font-heading font-semibold text-gli-navy">Email</span>
-          <input type="email" inputMode="email" autoComplete="email" className={field} value={v.email} onChange={(e) => set("email", e.target.value)} maxLength={200} {...err("email")} />
+          <input name="email" type="email" inputMode="email" autoComplete="email" className={field} value={v.email} onChange={(e) => set("email", e.target.value)} maxLength={200} {...err("email")} />
           <FieldError id="c-email-error" msg={errors.email} />
         </label>
       </div>
@@ -84,17 +84,17 @@ export function ContactForm() {
         <span className="font-heading font-semibold text-gli-navy">
           Mobile <span className="font-normal text-gli-slate">(optional)</span>
         </span>
-        <input type="tel" inputMode="tel" autoComplete="tel" className={field} value={v.mobile} onChange={(e) => set("mobile", e.target.value)} placeholder="0917 123 4567" maxLength={30} {...err("mobile")} />
+        <input name="mobile" type="tel" inputMode="tel" autoComplete="tel" className={field} value={v.mobile} onChange={(e) => set("mobile", e.target.value)} placeholder="0917 123 4567" maxLength={30} {...err("mobile")} />
         <FieldError id="c-mobile-error" msg={errors.mobile} />
       </label>
       <label className="block">
         <span className="font-heading font-semibold text-gli-navy">Message</span>
-        <textarea className={`${field} min-h-36 py-3`} value={v.message} onChange={(e) => set("message", e.target.value)} maxLength={4000} {...err("message")} />
+        <textarea name="message" className={`${field} min-h-36 py-3`} value={v.message} onChange={(e) => set("message", e.target.value)} maxLength={4000} {...err("message")} />
         <FieldError id="c-message-error" msg={errors.message} />
       </label>
       <div>
         <label className="flex items-start gap-3">
-          <input type="checkbox" className="mt-1 size-5 shrink-0 accent-gli-blue" checked={v.consent} onChange={(e) => set("consent", e.target.checked)} {...err("consent")} />
+          <input name="consent" type="checkbox" className="mt-1 size-5 shrink-0 accent-gli-blue" checked={v.consent} onChange={(e) => set("consent", e.target.checked)} {...err("consent")} />
           <span>
             I agree that Graphics Library, Inc. may use my details to respond to this enquiry, as described in the{" "}
             <Link href="/privacy" className="font-semibold text-gli-blue underline underline-offset-4">
@@ -107,7 +107,7 @@ export function ContactForm() {
       </div>
       <div className="absolute -left-[9999px]" aria-hidden="true">
         <label>
-          Leave this empty <input type="text" tabIndex={-1} autoComplete="off" value={website} onChange={(e) => setWebsite(e.target.value)} />
+          Leave this empty <input name="website" type="text" tabIndex={-1} autoComplete="off" value={website} onChange={(e) => setWebsite(e.target.value)} />
         </label>
       </div>
       <Turnstile onToken={setToken} />

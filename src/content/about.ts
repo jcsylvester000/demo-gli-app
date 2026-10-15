@@ -61,8 +61,8 @@ export const HOW_WE_WORK = {
 };
 
 export const CLIENTS_PAGE = {
-  seoTitle: "Clients Since 1996 | GLI",
-  meta: "Brands and organisations GLI has worked with since 1996, across pharma, consumer and retail, real estate, finance and associations.",
+  seoTitle: "Clients: 50+ Brands Since 1996 | GLI",
+  meta: "Pharma, consumer, real estate, banking and education brands GLI has worked with since 1996, grouped by industry.",
   h1: "Clients since 1996",
   intro: "We are proud of the brands that have trusted us. Some appear here as names only, out of respect for their confidentiality.",
 };

@@ -7,7 +7,7 @@ import { serviceBySlug } from "@/content/services";
 import { caseBySlug } from "@/content/cases";
 import { caseVisible, productSetting, resolveCase, resolveText } from "@/lib/gate";
 import { getGovernance } from "@/lib/server/governance";
-import { pageMetadata } from "@/lib/seo";
+import { fitTitle, pageMetadata } from "@/lib/seo";
 import { siteUrl } from "@/lib/utils";
 import { Breadcrumbs } from "@/components/layout/breadcrumbs";
 import { JsonLd } from "@/components/seo/json-ld";
@@ -28,8 +28,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const p = productBySlug((await params).slug);
   if (!p) return {};
   return pageMetadata({
-    title: `${p.name} | Production Catalogue | GLI`.slice(0, 70),
-    description: `${p.oneLiner} ${p.specs.map((s) => s.value).join("; ")}. Designed and produced by GLI in Manila.`.slice(0, 160),
+    // SEO Map pattern: "[Product]: Specs, Options & Quote | GLI Manila"
+    title: fitTitle(`${p.name}: Specs, Options & Quote | GLI Manila`, `${p.name}: Specs & Quote | GLI Manila`, `${p.name} | GLI Manila`, `${p.name} | GLI`),
+    description: `${p.name}: ${p.specs.map((s) => s.value.charAt(0).toLowerCase() + s.value.slice(1)).join("; ")}. Add it to a job ticket for a quote.`.slice(0, 160),
     path: `/products/${p.slug}`,
   });
 }
