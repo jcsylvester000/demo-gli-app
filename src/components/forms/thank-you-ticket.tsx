@@ -29,7 +29,7 @@ export function ThankYouTicket({ promise }: { promise: string }) {
       <h1 className="text-[2.25rem] leading-[1.1] md:text-[3rem]">{t?.ticket ? `Ticket ${t.ticket} received` : "Job ticket received"}</h1>
       <p className="mt-4 text-lg text-gli-ink">
         {t?.first ? `Thanks, ${t.first}. ` : "Thank you. "}
-        {t?.email ? `A copy is on its way to ${t.email}.` : "A copy is on its way to your inbox."}
+        {t?.ticket ? "Keep your ticket number handy: quote it when we get in touch, or if you message us." : "Our team has your details."}
       </p>
       <ol className="mt-8 space-y-3 text-lg">
         <li>

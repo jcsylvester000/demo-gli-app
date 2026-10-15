@@ -59,7 +59,7 @@ export function ContactForm() {
     return (
       <div role="status" className="rounded-[var(--radius)] border border-gli-blue bg-gli-tint p-6">
         <p className="font-heading text-xl font-semibold text-gli-navy">Thanks, {v.name.trim().split(/\s+/)[0]}. Your message is in.</p>
-        <p className="mt-2">A copy is on its way to {v.email.trim()}. Have a project in mind? A job ticket gets you a faster, more complete reply.</p>
+        <p className="mt-2">Our team will get back to you at {v.email.trim()}. Have a project in mind? A job ticket gets you a faster, more complete reply.</p>
         <Link href="/quote" className={buttonClass("primary", "md", "mt-4")}>
           Start a job ticket
         </Link>

@@ -71,19 +71,8 @@ CREATE TABLE IF NOT EXISTS lead_activity (
 );
 CREATE INDEX IF NOT EXISTS lead_activity_lead_idx ON lead_activity (lead_id, created_at);
 
--- Retry queue for auto-reply / sales notification / team alert (a failed send never loses the lead).
-CREATE TABLE IF NOT EXISTS outbox (
-  id          BIGSERIAL PRIMARY KEY,
-  lead_id     BIGINT REFERENCES lead(id) ON DELETE CASCADE,
-  channel     TEXT NOT NULL,
-  payload     JSONB NOT NULL,
-  attempts    INTEGER NOT NULL DEFAULT 0,
-  last_error  TEXT,
-  sent_at     TIMESTAMPTZ,
-  created_at  TIMESTAMPTZ NOT NULL DEFAULT now(),
-  UNIQUE (lead_id, channel)
-);
-CREATE INDEX IF NOT EXISTS outbox_pending_idx ON outbox (created_at) WHERE sent_at IS NULL;
+-- Forms store leads only (no emails, no retry queue). The old email queue held copies of form data: remove it.
+DROP TABLE IF EXISTS outbox;
 
 -- Governance registers (edited in the admin; read by the public site).
 CREATE TABLE IF NOT EXISTS client_permission (
@@ -171,7 +160,6 @@ CREATE TABLE IF NOT EXISTS upload_session (
 );
 CREATE INDEX IF NOT EXISTS upload_session_ip_idx ON upload_session (ip_hash, created_at);
 ALTER TABLE lead_file ADD COLUMN IF NOT EXISTS part_count INTEGER NOT NULL DEFAULT 1;
-ALTER TABLE outbox ADD COLUMN IF NOT EXISTS next_attempt_at TIMESTAMPTZ NOT NULL DEFAULT now();
 INSERT INTO consent_text (version, body) VALUES
   ('contact-v1', 'I agree that Graphics Library, Inc. may use my details to respond to this enquiry, as described in the Privacy Notice.')
 ON CONFLICT (version) DO NOTHING;

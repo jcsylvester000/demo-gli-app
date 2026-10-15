@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { addNote, eraseLead, retryEmails, updateLead } from "@/app/admin/actions";
+import { addNote, eraseLead, updateLead } from "@/app/admin/actions";
 import { ActionForm } from "./action-form";
 import { btn, input, Label } from "./ui";
 
@@ -105,20 +105,6 @@ export function NoteForm({ id }: { id: string }) {
   );
 }
 
-export function RetryEmails({ id }: { id: string }) {
-  return (
-    <ActionForm action={retryEmails}>
-      {(pending) => (
-        <>
-          <input type="hidden" name="id" value={id} />
-          <button disabled={pending} className={btn("secondary")}>
-            {pending ? "Sending…" : "Retry sending now"}
-          </button>
-        </>
-      )}
-    </ActionForm>
-  );
-}
 
 export function EraseLead({ id }: { id: string }) {
   return (

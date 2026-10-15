@@ -5,7 +5,7 @@ import { getLead, isOverdue } from "@/lib/server/admin/leads";
 import { ALL_SERVICES, INDUSTRIES } from "@/content/site";
 import { productBySlug } from "@/content/products";
 import { Badge, Card, PageTitle, btn, manila } from "@/components/admin/ui";
-import { EraseLead, LeadUpdateForm, NoteForm, RetryEmails } from "@/components/admin/lead-controls";
+import { EraseLead, LeadUpdateForm, NoteForm } from "@/components/admin/lead-controls";
 
 export const metadata = { title: "Lead" };
 
@@ -22,14 +22,13 @@ export default async function LeadPage({ params }: { params: Promise<{ id: strin
   if (!Number.isInteger(id) || id < 1) notFound();
   const data = await getLead(id);
   if (!data) notFound();
-  const { lead: l, files, activity, outbox, users } = data;
+  const { lead: l, files, activity, users } = data;
   const str = (k: string) => (l[k] == null || l[k] === "" ? null : String(l[k]));
   const services = (l.services as string[]).map((s) => ALL_SERVICES.find((x) => x.slug === s)?.name ?? "Not sure yet");
   const products = (l.products as string[]).map((p) => productBySlug(p)?.name ?? p);
   const industry = str("industry") ? (INDUSTRIES.find((i) => i.slug === l.industry)?.name ?? "Other") : null;
   const mobile = str("mobile");
   const late = isOverdue(l.status, l.created_at);
-  const failing = outbox.filter((o) => !o.sent_at);
 
   const facts: [string, string | null][] = [
     ["Services", services.join(", ") || null],
@@ -151,23 +150,6 @@ export default async function LeadPage({ params }: { params: Promise<{ id: strin
               users={users}
             />
           </Card>
-          {outbox.length ? (
-            <Card title="Emails and alerts">
-              <ul className="space-y-2 text-[0.9375rem]">
-                {outbox.map((o) => (
-                  <li key={o.channel}>
-                    <span className="font-semibold">{o.channel === "auto_reply" ? "Auto-reply to client" : o.channel === "sales_notify" ? "Sales notification" : "Team alert"}</span>{" "}
-                    {o.sent_at ? <span className="text-success">sent {manila(o.sent_at)}</span> : <span className="text-danger">not sent{o.last_error ? `: ${o.last_error}` : ""}</span>}
-                  </li>
-                ))}
-              </ul>
-              {failing.length ? (
-                <div className="mt-3">
-                  <RetryEmails id={l.id} />
-                </div>
-              ) : null}
-            </Card>
-          ) : null}
           {can(me.role, "admin") ? (
             <Card title="Erase this lead">
               <EraseLead id={l.id} />

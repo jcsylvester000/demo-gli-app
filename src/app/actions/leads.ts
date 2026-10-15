@@ -5,10 +5,8 @@ import { getPool, hasDatabase } from "@/lib/server/pool";
 import { ipHash } from "@/lib/server/request";
 import { verifyTurnstile } from "@/lib/server/turnstile";
 import { nextTicketNo } from "@/lib/server/ticket";
-import { enqueueFanout, processOutbox } from "@/lib/server/outbox";
-import type { LeadForMail } from "@/lib/server/email";
+import { uploadStore } from "@/lib/server/blob-store";
 import { headers } from "next/headers";
-import { getContact } from "@/lib/server/site-settings";
 
 export type SubmitResult = { ok: true; ticket: string | null } | { ok: false; error: string; fieldErrors?: Record<string, string> };
 
@@ -40,15 +38,20 @@ async function guard(token: string | null | undefined, honeypot: string | null |
   return null;
 }
 
-/** Fan-out right away; anything that fails stays queued for retry. Never blocks the visitor for long. */
-async function sendNow(leadId: number) {
+/** Abandoned uploads (never attached to a ticket) are removed after a day; runs on each submission, no cron needed. */
+async function cleanStaleUploads() {
   try {
-    await Promise.race([processOutbox({ leadId, limit: 5 }), new Promise((r) => setTimeout(r, 12_000))]);
+    const pool = getPool();
+    const stale = await pool.query<{ id: string }>(`SELECT id FROM upload_session WHERE status <> 'linked' AND created_at < now() - interval '1 day' LIMIT 25`);
+    if (!stale.rowCount) return;
+    const store = await uploadStore();
+    for (const u of stale.rows) {
+      await store.deletePrefix(`${u.id}/`);
+      await pool.query(`DELETE FROM upload_session WHERE id = $1`, [u.id]);
+    }
   } catch (e) {
-    console.error("[fanout] deferred:", (e as Error).message);
+    console.error("[uploads] cleanup skipped:", (e as Error).message);
   }
-  // Opportunistically retry older queued messages too.
-  processOutbox({ limit: 5 }).catch(() => {});
 }
 
 /** Job ticket (BRD FR-060–065, Workflow 9.2). */
@@ -60,9 +63,8 @@ export async function submitQuote(input: QuoteInput): Promise<SubmitResult> {
   if (blocked) return { ok: false, error: blocked };
 
   const ip = await ipHash();
-  const contact = await getContact(); // before the transaction: never hold two connections at once
   const client = await getPool().connect();
-  let lead: LeadForMail;
+  let ticketNo: string | null = null;
   try {
     await client.query("BEGIN");
     const ticket = await nextTicketNo(client);
@@ -116,28 +118,7 @@ export async function submitQuote(input: QuoteInput): Promise<SubmitResult> {
       ]);
     }
     await client.query(`INSERT INTO lead_activity (lead_id, type, body) VALUES ($1, 'created', $2)`, [id, `Job ticket ${ticket} submitted (${files.length} file${files.length === 1 ? "" : "s"})`]);
-    lead = {
-      id,
-      kind: "quote",
-      ticketNo: ticket,
-      name: d.name,
-      company: d.company,
-      email: d.email,
-      mobile: d.mobile,
-      channel: d.channel,
-      services: d.services,
-      industry: d.industry,
-      products: d.products,
-      eventDate: d.eventDate || null,
-      venue: d.venue,
-      qtySizes: d.qtySizes,
-      budgetBand: d.budgetBand,
-      notes: d.notes,
-      files: files.map((f) => ({ filename: f.filename, size: f.size_bytes })),
-      utm: [d.utmSource, d.utmMedium, d.utmCampaign].filter(Boolean).join(" / ") || null,
-      landingPage: d.landingPage,
-    };
-    await enqueueFanout(client, lead, contact);
+    ticketNo = ticket;
     await client.query("COMMIT");
   } catch (e) {
     await client.query("ROLLBACK").catch(() => {});
@@ -146,11 +127,11 @@ export async function submitQuote(input: QuoteInput): Promise<SubmitResult> {
   } finally {
     client.release();
   }
-  await sendNow(lead.id);
-  return { ok: true, ticket: lead.ticketNo };
+  cleanStaleUploads().catch(() => {});
+  return { ok: true, ticket: ticketNo };
 }
 
-/** Contact form (BRD FR-071): same pipeline, tagged "contact", no ticket number. */
+/** Contact form (BRD FR-071): saved as a lead tagged "contact", no ticket number. Leads are stored only (no emails). */
 export async function submitContact(input: ContactInput): Promise<SubmitResult> {
   const parsed = contactSchema.safeParse(input);
   if (!parsed.success) return { ok: false, error: "Please check the highlighted fields.", fieldErrors: fieldErrors(parsed.error.issues) };
@@ -158,9 +139,7 @@ export async function submitContact(input: ContactInput): Promise<SubmitResult> 
   const blocked = await guard(d.turnstileToken, d.website);
   if (blocked) return { ok: false, error: blocked };
   const ip = await ipHash();
-  const contact = await getContact(); // before the transaction: never hold two connections at once
   const client = await getPool().connect();
-  let lead: LeadForMail;
   try {
     await client.query("BEGIN");
     const { rows } = await client.query<{ id: string }>(
@@ -170,8 +149,6 @@ export async function submitContact(input: ContactInput): Promise<SubmitResult> 
     );
     const id = Number(rows[0].id);
     await client.query(`INSERT INTO lead_activity (lead_id, type, body) VALUES ($1, 'created', 'Contact form submitted')`, [id]);
-    lead = { id, kind: "contact", ticketNo: null, name: d.name, email: d.email, mobile: d.mobile, notes: d.message, utm: [d.utmSource, d.utmMedium, d.utmCampaign].filter(Boolean).join(" / ") || null, landingPage: d.landingPage };
-    await enqueueFanout(client, lead, contact);
     await client.query("COMMIT");
   } catch (e) {
     await client.query("ROLLBACK").catch(() => {});
@@ -180,6 +157,5 @@ export async function submitContact(input: ContactInput): Promise<SubmitResult> 
   } finally {
     client.release();
   }
-  await sendNow(lead.id);
   return { ok: true, ticket: null };
 }

@@ -10,7 +10,6 @@ import { audit, getAdminSession, requireAdminAction } from "@/lib/server/admin/g
 import { createUser, setPassword, USERNAME_RE, type Role } from "@/lib/server/users";
 import { GOVERNANCE_TAG } from "@/lib/server/governance";
 import { uploadStore } from "@/lib/server/blob-store";
-import { processOutbox } from "@/lib/server/outbox";
 import { createsLoop, redirectMap } from "@/lib/server/redirects";
 import { CLIENTS } from "@/content/clients";
 import { CASES } from "@/content/cases";
@@ -104,21 +103,7 @@ export async function addNote(_prev: ActionState, fd: FormData): Promise<ActionS
   }
 }
 
-export async function retryEmails(_prev: ActionState, fd: FormData): Promise<ActionState> {
-  try {
-    const me = await requireAdminAction("leads");
-    const id = z.coerce.number().int().positive().parse(fd.get("id"));
-    await getPool().query(`UPDATE outbox SET next_attempt_at = now(), attempts = LEAST(attempts, 5) WHERE lead_id = $1 AND sent_at IS NULL`, [id]);
-    const r = await processOutbox({ leadId: id, limit: 5 });
-    await audit(me.id, "lead.retry_emails", `lead:${id}`);
-    revalidatePath(`/admin/leads/${id}`);
-    return r.claimed === 0 ? { ok: true, message: "Nothing waiting to send." } : r.sent === r.claimed ? { ok: true, message: `Sent ${r.sent}.` } : { error: `Sent ${r.sent} of ${r.claimed}; see the error on each message.` };
-  } catch (e) {
-    return fail(e);
-  }
-}
-
-/** Data-subject erasure (RA 10173): deletes the lead, its files, notes and queued messages. ADMIN only. */
+/** Data-subject erasure (RA 10173): deletes the lead, its files and notes. ADMIN only. */
 export async function eraseLead(_prev: ActionState, fd: FormData): Promise<ActionState> {
   let id = 0;
   try {

@@ -68,11 +68,6 @@ export default async function Overview() {
   return (
     <>
       <PageTitle title="Overview" sub="Job tickets and enquiries. Target: first reply within one business day." />
-      {s.failing ? (
-        <p role="alert" className="mb-5 rounded-lg border border-danger/40 bg-danger-tint p-3 font-semibold text-danger">
-          {s.failing} email{s.failing === 1 ? "" : "s"} could not be sent yet. Leads are safe; open a lead to retry, or check the email settings.
-        </p>
-      ) : null}
       <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-6">
         <Stat label="New, not yet contacted" value={s.newCount} href="/admin/leads?status=new" />
         <Stat label="Overdue (over 1 business day)" value={s.overdue.length} href="/admin/leads?overdue=1" tone="alert" />

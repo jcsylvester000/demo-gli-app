@@ -91,21 +91,20 @@ export async function getLead(id: number) {
   const pool = getPool();
   const lead = await pool.query(`SELECT l.*, l.event_date::text AS event_date_text, l.follow_up_at::text AS follow_up_text FROM lead l WHERE l.id = $1`, [id]);
   if (!lead.rowCount) return null;
-  const [files, activity, outbox, users] = await Promise.all([
+  const [files, activity, users] = await Promise.all([
     pool.query<{ id: string; filename: string; size_bytes: number; created_at: string }>(`SELECT id, filename, size_bytes, created_at FROM lead_file WHERE lead_id = $1 ORDER BY id`, [id]),
     pool.query<{ type: string; body: string | null; created_at: string; actor: string | null }>(
       `SELECT a.type, a.body, a.created_at, u.name AS actor FROM lead_activity a LEFT JOIN "user" u ON u.id = a.actor_id WHERE a.lead_id = $1 ORDER BY a.created_at DESC, a.id DESC`,
       [id],
     ),
-    pool.query<{ channel: string; sent_at: string | null; attempts: number; last_error: string | null }>(`SELECT channel, sent_at, attempts, last_error FROM outbox WHERE lead_id = $1 ORDER BY id`, [id]),
     pool.query<{ id: string; name: string; role: string }>(`SELECT id, name, role FROM "user" WHERE role IN ('ADMIN','SALES') ORDER BY name`),
   ]);
-  return { lead: lead.rows[0] as Record<string, unknown> & { id: string; status: string; created_at: string; kind: string }, files: files.rows, activity: activity.rows, outbox: outbox.rows, users: users.rows };
+  return { lead: lead.rows[0] as Record<string, unknown> & { id: string; status: string; created_at: string; kind: string }, files: files.rows, activity: activity.rows, users: users.rows };
 }
 
 export async function overviewStats() {
   const pool = getPool();
-  const [totals, newRows, byService, bySource, daily, followUps, outbox, newsletter] = await Promise.all([
+  const [totals, newRows, byService, bySource, daily, followUps, newsletter] = await Promise.all([
     pool.query<{ week: number; month: number; open: number; won: number }>(
       `SELECT count(*) FILTER (WHERE created_at > now() - interval '7 days')::int AS week,
               count(*) FILTER (WHERE created_at > now() - interval '30 days')::int AS month,
@@ -131,7 +130,6 @@ export async function overviewStats() {
     pool.query<{ id: string; ticket_no: string | null; name: string | null; follow_up_at: string }>(
       `SELECT id, ticket_no, name, follow_up_at::text FROM lead WHERE follow_up_at <= (now() AT TIME ZONE 'Asia/Manila')::date AND status NOT IN ('won','lost','spam') ORDER BY follow_up_at LIMIT 10`,
     ),
-    pool.query<{ failing: number }>(`SELECT count(*)::int AS failing FROM outbox WHERE sent_at IS NULL AND last_error IS NOT NULL`),
     pool.query<{ n: number }>(`SELECT count(*)::int AS n FROM lead WHERE kind = 'newsletter'`),
   ]);
   const overdue = newRows.rows.filter((r) => isOverdue("new", r.created_at));
@@ -143,7 +141,6 @@ export async function overviewStats() {
     bySource: bySource.rows,
     daily: daily.rows,
     followUps: followUps.rows,
-    failing: outbox.rows[0].failing,
     newsletter: newsletter.rows[0].n,
   };
 }

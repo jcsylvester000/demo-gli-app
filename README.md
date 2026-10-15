@@ -24,9 +24,8 @@ Checks: `npm run check` (lint + types + build).
    - `DATABASE_URL` = Neon **pooled** connection string (required)
    - `IP_HASH_SALT` = any long random string (required from Batch 4)
    - `NEXT_PUBLIC_GTM_ID` = GTM container ID (optional; analytics only load after the visitor accepts cookies)
-   - Lead capture (Batch 4): `RESEND_API_KEY`, `LEAD_FROM_EMAIL` (e.g. `GLI Job Tickets <tickets@your-domain>`; verify the
-     domain in Resend for SPF/DKIM/DMARC), `SALES_INBOX` (comma-separated), `NEXT_PUBLIC_TURNSTILE_SITE_KEY` +
-     `TURNSTILE_SECRET_KEY` (Cloudflare Turnstile), `CRON_SECRET` (16+ random characters), optional `TEAM_ALERT_WEBHOOK_URL`.
+   - Forms: `NEXT_PUBLIC_TURNSTILE_SITE_KEY` + `TURNSTILE_SECRET_KEY` (Cloudflare Turnstile spam check). No email or
+     cron settings: forms only store leads.
    - Admin (Batch 5): `BETTER_AUTH_SECRET` (32+ random characters), `BETTER_AUTH_URL` (the site's public URL, no trailing
      slash), optional `ADMIN_INITIAL_PASSWORD`.
    - SEO (Batch 6, real domain only): `ALLOW_INDEXING=true`, `NEXT_PUBLIC_SITE_URL=https://<domain>`, optional `INDEXNOW_KEY`.
@@ -35,15 +34,15 @@ Checks: `npm run check` (lint + types + build).
 
 The site stays `noindex` until the real domain is live: then set `ALLOW_INDEXING=true` and `NEXT_PUBLIC_SITE_URL=https://<domain>`.
 
-## Lead capture (Batch 4)
+## Lead capture (forms store leads only)
 
 - `/quote`: 4-step job ticket (S8). Ticket numbers `GLI-YYMM-####` (Manila month), unique and sequential.
 - Uploads: PDF, AI, PSD, JPG, PNG, ZIP · ≤ 25 MB · ≤ 5 files. Netlify functions accept ~6 MB per request, so the browser
   sends 4 MB parts to `/api/upload/...`; the first bytes are checked against the file type. Files live in Netlify Blobs
   (store `quote-uploads`, private) or `./.data/uploads` locally. They are downloadable only from the admin (Batch 5).
-- After saving, an outbox queues the auto-reply, sales email and optional team alert in the same transaction. Failed sends
-  retry with back-off (on later submissions and every 15 min via `netlify/functions/outbox-retry.mts`). A lead is never lost.
-- Without email settings, leads still save and emails wait in the outbox until settings are added.
+- Forms **store leads only**: the job ticket, contact form and newsletter sign-up save to Neon and appear in `/admin`.
+  No emails are sent and there is no scheduled job. The team checks the admin Overview for new leads.
+- Abandoned uploads (never attached to a ticket) are cleaned up after a day, on the next form submission.
 - `/api/health` shows which integrations are configured (no values).
 
 ## Admin (Batch 5)
@@ -54,7 +53,7 @@ The site stays `noindex` until the real domain is live: then set `ALLOW_INDEXING
 - Roles: **Sales** (leads, files), **Editor** (case studies, prices and lead times, contact details, style guide; no lead
   data), **Admin** (everything: team, client permissions, Rx clearance, testimonials, redirects, CSV export, erase).
 - Leads: overview (new, overdue over 1 business day, follow-ups, by service/source), list with search and filters, detail
-  with one-tap Call/Viber/WhatsApp/Email, status/owner/priority/follow-up, notes, private file downloads, email retry,
+  with one-tap Call/Viber/WhatsApp/Email, status/owner/priority/follow-up, notes, private file downloads,
   CSV export (Admin) and erase for data-subject requests (Admin).
 - Publishing changes (permissions, cases, testimonials, prices, contact details, redirects) refresh the public site
   within seconds (cache tag `governance`).

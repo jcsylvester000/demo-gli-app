@@ -16,13 +16,8 @@
 #   DATABASE_URL            Neon *pooled* connection string                       (required)
 #   IP_HASH_SALT            random string, used to rate-limit forms               (required from Batch 4)
 #   NEXT_PUBLIC_GTM_ID      Google Tag Manager container, e.g. GTM-XXXXXXX        (optional; banner + GTM off without it)
-# Lead capture (Batch 4):
-#   RESEND_API_KEY          Resend API key (transactional email)                    (needed to send emails)
-#   LEAD_FROM_EMAIL         e.g. "GLI Job Tickets <tickets@your-domain>" (domain verified in Resend: SPF/DKIM/DMARC)
-#   SALES_INBOX             comma-separated inboxes that receive new tickets
+# Lead capture: forms store leads in Neon only (no emails, no scheduled jobs). Leads are read in /admin.
 #   NEXT_PUBLIC_TURNSTILE_SITE_KEY + TURNSTILE_SECRET_KEY   Cloudflare Turnstile (test keys are used until set)
-#   CRON_SECRET             16+ random characters: lets the 15-minute retry job resend queued emails
-#   TEAM_ALERT_WEBHOOK_URL  optional Slack-compatible webhook for instant team alerts
 # Uploads use Netlify Blobs (store "quote-uploads"): nothing to configure.
 # Admin (Batch 5):
 #   BETTER_AUTH_SECRET      32+ random characters (e.g. openssl rand -base64 36)               (required)
