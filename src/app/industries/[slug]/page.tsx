@@ -17,6 +17,8 @@ import { SignOffTestimonial } from "@/components/gli/sign-off-testimonial";
 import { JsonLd } from "@/components/seo/json-ld";
 import { orgRef } from "@/lib/schema";
 import { siteUrl } from "@/lib/utils";
+import { StockFigure } from "@/components/gli/proof-image";
+import { industryStock } from "@/content/stock";
 
 export const revalidate = 300;
 export const generateStaticParams = () => INDUSTRY_PAGES.map((i) => ({ slug: i.slug }));
@@ -56,6 +58,11 @@ export default async function IndustryPage({ params }: Props) {
         intro={resolveText(g, i.body)}
         primary={{ label: i.cta, href: "/quote" }}
         secondary={{ label: "See related work", href: "#work" }}
+        aside={
+          <div className="mx-auto max-w-md rotate-1">
+            <StockFigure photo={industryStock(i.slug)!} priority sizes="(min-width: 1024px) 420px, 90vw" />
+          </div>
+        }
       />
 
       <section aria-labelledby="do-title" className="bg-white">

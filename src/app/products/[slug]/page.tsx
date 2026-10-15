@@ -17,7 +17,8 @@ import { SpecCard, formatPhp } from "@/components/gli/spec-card";
 import { AddToQuote } from "@/components/gli/add-to-quote";
 import { CaseCard } from "@/components/gli/case-card";
 import { ProofFaq } from "@/components/gli/proof-faq";
-import { ProofImage, TypeThumb } from "@/components/gli/proof-image";
+import { ProofImage, StockFigure, TypeThumb } from "@/components/gli/proof-image";
+import { productStock } from "@/content/stock";
 
 export const revalidate = 300;
 export const generateStaticParams = () => PRODUCTS.map((p) => ({ slug: p.slug }));
@@ -94,6 +95,8 @@ export default async function ProductPage({ params }: Props) {
           <div className="mx-auto w-full max-w-md rotate-1">
             {p.image ? (
               <ProofImage image={p.image} priority sizes="(min-width: 1024px) 440px, 90vw" />
+            ) : productStock(p.slug) ? (
+              <StockFigure photo={productStock(p.slug)!} priority sizes="(min-width: 1024px) 440px, 90vw" />
             ) : (
               <TypeThumb label={p.name} sub={categoryLabel(p.category)} className="shadow-xl" />
             )}
@@ -181,6 +184,7 @@ export default async function ProductPage({ params }: Props) {
                     leadTime={rs.leadTime}
                     image={r.image}
                     fallbackLabel={categoryLabel(r.category)}
+                    photo={productStock(r.slug)}
                     addToQuote={<AddToQuote slug={r.slug} name={r.name} />}
                   />
                 );

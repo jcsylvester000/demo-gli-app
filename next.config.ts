@@ -12,7 +12,7 @@ const allowIndexing =
 
 const csp = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://challenges.cloudflare.com",
+  `script-src 'self' 'unsafe-inline'${process.env.NODE_ENV === "development" ? " 'unsafe-eval'" : ""} https://www.googletagmanager.com https://challenges.cloudflare.com`, // dev only: React debugging uses eval
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob: https://www.googletagmanager.com https://*.google-analytics.com",
   "font-src 'self'",
@@ -38,7 +38,12 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   reactStrictMode: true,
   experimental: { inlineCss: true },
-  images: { formats: ["image/avif", "image/webp"] },
+  images: {
+    formats: ["image/avif", "image/webp"],
+    qualities: [75, 80, 90],
+    // Illustrative stock photos (src/content/stock.ts), optimised and served from this site.
+    remotePatterns: [{ protocol: "https", hostname: "images.unsplash.com", pathname: "/photo-**" }],
+  },
   env: {
     NEXT_PUBLIC_SITE_URL: siteUrl,
     NEXT_PUBLIC_ALLOW_INDEXING: allowIndexing ? "true" : "false",

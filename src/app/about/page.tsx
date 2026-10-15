@@ -11,6 +11,8 @@ import { Counters } from "@/components/gli/counters";
 import { JsonLd } from "@/components/seo/json-ld";
 import { orgRef } from "@/lib/schema";
 import { siteUrl } from "@/lib/utils";
+import { StockFigure } from "@/components/gli/proof-image";
+import { pageStock } from "@/content/stock";
 
 export const revalidate = 300;
 export const metadata = pageMetadata({ title: ABOUT.seoTitle, description: ABOUT.meta, path: "/about" });
@@ -26,6 +28,11 @@ export default async function About() {
         intro={ABOUT.intro}
         primary={{ label: "Start a job ticket", href: "/quote" }}
         secondary={{ label: "See how we work", href: "/about/how-we-work" }}
+        aside={
+          <div className="mx-auto max-w-md rotate-1">
+            <StockFigure photo={pageStock.about} priority sizes="(min-width: 1024px) 420px, 90vw" />
+          </div>
+        }
       />
 
       <section aria-label="GLI in numbers" className="border-b border-gli-line bg-gli-tint">

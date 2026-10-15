@@ -6,6 +6,8 @@ import { PageHero } from "@/components/layout/page-hero";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { MarkList } from "@/components/pages/list-with-marks";
 import { ProcessTimeline } from "@/components/gli/process-timeline";
+import { StockFigure } from "@/components/gli/proof-image";
+import { pageStock } from "@/content/stock";
 
 export const metadata = pageMetadata({ title: HOW_WE_WORK.seoTitle, description: HOW_WE_WORK.meta, path: "/about/how-we-work" });
 
@@ -24,6 +26,11 @@ export default function HowWeWork() {
         intro={HOW_WE_WORK.intro}
         primary={{ label: "Start a job ticket", href: "/quote" }}
         proof="One producer, one point of contact, from brief to wrap-up"
+        aside={
+          <div className="mx-auto max-w-md -rotate-1">
+            <StockFigure photo={pageStock.howWeWork} priority sizes="(min-width: 1024px) 420px, 90vw" />
+          </div>
+        }
       />
       <section aria-labelledby="steps-title" className="bg-white">
         <div className="container-site py-14 md:py-20">

@@ -48,7 +48,7 @@ The site stays `noindex` until the real domain is live: then set `ALLOW_INDEXING
 
 ## Admin (Batch 5)
 
-- Sign in at `/admin/login`. The public footer links there with a tiny registration mark after the copyright line.
+- Sign in at `/admin/login`. The public footer links there as "Admin", under Cookie settings in the Legal column.
 - First account: username `Admin`, temporary password `Admin1234` (or `ADMIN_INITIAL_PASSWORD`), created by `db:migrate`
   on an empty database. It must be changed at first sign-in. Turn on two-step verification under My account.
 - Roles: **Sales** (leads, files), **Editor** (case studies, prices and lead times, contact details, style guide; no lead

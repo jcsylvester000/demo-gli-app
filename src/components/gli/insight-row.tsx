@@ -2,6 +2,7 @@ import Link from "next/link";
 import { categoryName, type ArticleMeta } from "@/content/articles";
 import { CropMarks } from "@/components/brand/print-marks";
 import { TypeThumb } from "./proof-image";
+import { articleStock } from "@/content/stock";
 
 /**
  * S13 Insight Article Row (Blog 8, shadcnblocks, MIT; rebuilt). Category eyebrow in tracked caps; thumbnail trimmed
@@ -25,7 +26,7 @@ export function InsightRow({ items }: { items: ArticleMeta[] }) {
             </div>
             <div className="relative max-sm:hidden">
               <CropMarks />
-              <TypeThumb label={categoryName(a.category)} sub="Insights" aspect="aspect-[4/3]" />
+              <TypeThumb label={categoryName(a.category)} sub="Insights" aspect="aspect-[4/3]" photo={articleStock(a.slug)} sizes="12rem" />
             </div>
           </article>
         </li>

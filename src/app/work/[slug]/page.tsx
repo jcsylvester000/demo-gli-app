@@ -14,12 +14,13 @@ import { CmykBar } from "@/components/brand/print-marks";
 import { buttonClass } from "@/components/ui/button";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { CaseCard } from "@/components/gli/case-card";
-import { ProofImage, TypeThumb } from "@/components/gli/proof-image";
+import { ProofImage, StockFigure, TypeThumb } from "@/components/gli/proof-image";
 import { SignOffTestimonial } from "@/components/gli/sign-off-testimonial";
 import { TrackView } from "@/components/gli/track-view";
 import { JsonLd } from "@/components/seo/json-ld";
 import { orgRef } from "@/lib/schema";
 import { siteUrl } from "@/lib/utils";
+import { caseStock } from "@/content/stock";
 
 export const revalidate = 300;
 export const generateStaticParams = () => CASES.map((c) => ({ slug: c.slug }));
@@ -109,6 +110,8 @@ export default async function CasePage({ params }: Props) {
           <div className="mx-auto w-full max-w-lg -rotate-1">
             {hero ? (
               <ProofImage image={hero} priority sizes="(min-width: 1024px) 480px, 90vw" />
+            ) : caseStock(item.slug) ? (
+              <StockFigure photo={caseStock(item.slug)!} priority sizes="(min-width: 1024px) 480px, 90vw" caption="Project photos available on request" />
             ) : (
               <TypeThumb label={item.title} sub={industry?.name} className="shadow-xl" />
             )}

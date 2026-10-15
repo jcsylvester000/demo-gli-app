@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { GliMark } from "@/components/brand/logo";
-import { CmykSeal, RegMark } from "@/components/brand/print-marks";
+import { CmykSeal } from "@/components/brand/print-marks";
 import { CookieSettingsButton } from "@/components/consent/consent-manager";
 import { TrackedLink } from "@/components/ui/tracked-link";
 import { ALL_SERVICES, COMPANY_LINKS, LEGAL_LINKS, contactPending, hasValue, linksFor } from "@/content/site";
@@ -105,6 +105,12 @@ export async function Footer() {
               <li>
                 <CookieSettingsButton className={link} />
               </li>
+              <li>
+                {/* Staff sign-in (user request: directly below Cookie settings). nofollow + no prefetch keep it out of crawls. */}
+                <Link href="/admin/login" rel="nofollow" prefetch={false} className={link}>
+                  Admin
+                </Link>
+              </li>
             </ul>
           </nav>
         </div>
@@ -119,17 +125,6 @@ export async function Footer() {
         <div className="container-site flex flex-col gap-2 pb-6 text-[0.8125rem] text-white/70 md:flex-row md:justify-between">
           <p>
             © {new Date().getFullYear()} Graphics Library, Inc. All rights reserved. Client names and marks belong to their respective owners.
-            {/* Staff sign-in: deliberately discreet (a tiny registration mark after the copyright), keyboard-reachable with a visible focus ring. */}
-            <Link
-              href="/admin/login"
-              rel="nofollow"
-              prefetch={false}
-              aria-label="Staff sign-in"
-              title="Staff"
-              className="ml-1.5 inline-grid size-5 place-items-center rounded-full align-middle text-white/40 transition-colors hover:text-white/75"
-            >
-              <RegMark className="size-2.5" />
-            </Link>
           </p>
         </div>
         {contactPending(CONTACT) ? (

@@ -34,8 +34,8 @@ export const viewport: Viewport = { themeColor: "#00306B", width: "device-width"
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   const contact = await getContact();
   return (
-    <html lang="en-PH" className={`${barlow.variable} ${sourceSans.variable}`}>
-      <body className="flex min-h-dvh flex-col">
+    <html lang="en-PH" suppressHydrationWarning className={`${barlow.variable} ${sourceSans.variable}`}>
+      <body suppressHydrationWarning className="flex min-h-dvh flex-col">{/* browser extensions (e.g. Testim) add attributes to body */}
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-[80] focus:rounded focus:bg-white focus:px-4 focus:py-2 focus:font-semibold focus:text-gli-blue"

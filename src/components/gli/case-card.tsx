@@ -4,6 +4,7 @@ import type { ResolvedCase } from "@/lib/gate";
 import { INDUSTRIES } from "@/content/site";
 import { CropMarks } from "@/components/brand/print-marks";
 import { TypeThumb } from "./proof-image";
+import { caseStock } from "@/content/stock";
 
 const industryShort: Record<string, string> = {
   "pharma-and-healthcare": "Pharma",
@@ -38,11 +39,12 @@ export function CaseCard({ item, headingLevel = 3 }: { item: ResolvedCase; headi
                 alt={img.alt}
                 fill
                 sizes="(min-width: 1024px) 360px, (min-width: 640px) 45vw, 100vw"
+                quality={90}
                 className={img.fit === "contain" ? "object-contain p-2" : "object-cover"}
               />
             </div>
           ) : (
-            <TypeThumb label={item.title} sub={industry} />
+            <TypeThumb label={item.title} sub={industry} photo={caseStock(item.slug)} />
           )}
           <span
             aria-hidden="true"

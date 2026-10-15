@@ -5,6 +5,7 @@ import { ALL_SERVICES } from "@/content/site";
 import { SERVICE_MEDIA } from "@/content/service-media";
 import { CropMarks, RegMark } from "@/components/brand/print-marks";
 import { cn } from "@/lib/utils";
+import { serviceStock, stockUrl } from "@/content/stock";
 
 /**
  * S5 Press-Sheet Services Grid (Bento Grid, Magic UI, MIT; rebuilt). Tiles trimmed like press sheets (crop marks);
@@ -17,6 +18,7 @@ export function ServicesGrid({ order, featured = order[0], cta = true }: { order
       {services.map((s) => {
         const lead = s.slug === featured;
         const img = SERVICE_MEDIA[s.slug];
+        const stock = !img && !lead ? serviceStock(s.slug) : undefined;
         return (
           <li key={s.slug} className={cn("relative", lead && "sm:col-span-2 lg:row-span-2")}>
             <CropMarks />
@@ -39,11 +41,25 @@ export function ServicesGrid({ order, featured = order[0], cta = true }: { order
                     alt=""
                     fill
                     sizes={lead ? "(min-width: 1024px) 560px, (min-width: 640px) 90vw, 100vw" : "(min-width: 1024px) 270px, (min-width: 640px) 45vw, 100vw"}
+                    quality={90}
                     className={cn(
                       "transition-transform duration-300 group-hover:scale-[1.03]",
                       img.fit === "contain" ? "bg-gli-mist object-contain p-3" : "object-cover",
                     )}
                   />
+                ) : stock ? (
+                  <>
+                    <Image
+                      src={stockUrl(stock)}
+                      alt=""
+                      fill
+                      sizes="(min-width: 1024px) 270px, (min-width: 640px) 45vw, 100vw"
+                      className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+                    />
+                    <span className="eyebrow absolute left-2 top-2 rounded-sm bg-gli-navy/80 px-1.5 py-0.5 text-[0.625rem] text-white max-sm:hidden">
+                      Illustrative
+                    </span>
+                  </>
                 ) : (
                   <div className="on-dark ripple-field absolute inset-0 flex flex-col justify-between bg-gli-navy p-5 text-white">
                     <RegMark className="size-6 self-end text-gli-sky" />
@@ -68,7 +84,7 @@ export function ServicesGrid({ order, featured = order[0], cta = true }: { order
                   </div>
                 )}
               </div>
-              <div className={cn("flex flex-1 items-start justify-between gap-3 p-4", lead && "md:p-6")}>
+              <div className={cn("flex flex-1 items-start justify-between gap-3 p-4", lead && "md:p-6 lg:flex-none")}>
                 <div>
                   {lead ? <p className="eyebrow mb-1 text-[0.75rem] text-gli-blue">Our lead service</p> : null}
                   <h3 className={cn("font-heading font-semibold text-gli-navy group-hover:text-gli-blue", lead ? "text-2xl" : "text-lg")}>{s.name}</h3>

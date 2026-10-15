@@ -42,3 +42,7 @@
   for = "/images/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
+
+# Illustrative stock photos (src/content/stock.ts) go through Netlify Image CDN.
+[images]
+  remote_images = ["https://images.unsplash.com/photo-.*"]

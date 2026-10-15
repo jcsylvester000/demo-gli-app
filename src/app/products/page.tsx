@@ -9,6 +9,7 @@ import { AddToQuote } from "@/components/gli/add-to-quote";
 import { ProductBrowser } from "@/components/gli/product-browser";
 import { JsonLd } from "@/components/seo/json-ld";
 import { collectionPage } from "@/lib/schema";
+import { productStock } from "@/content/stock";
 
 export const revalidate = 300;
 export const metadata = pageMetadata({ title: PRODUCTS_HUB.seoTitle, description: PRODUCTS_HUB.meta, path: "/products" });
@@ -39,6 +40,7 @@ export default async function ProductsHub() {
                     leadTime={ps.leadTime}
                     image={p.image}
                     fallbackLabel={categoryLabel(p.category)}
+                    photo={productStock(p.slug)}
                     addToQuote={<AddToQuote slug={p.slug} name={p.name} />}
                   />
                 ),

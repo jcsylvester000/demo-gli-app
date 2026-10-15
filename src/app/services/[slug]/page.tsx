@@ -18,7 +18,8 @@ import { CaseCard } from "@/components/gli/case-card";
 import { SpecCard } from "@/components/gli/spec-card";
 import { AddToQuote } from "@/components/gli/add-to-quote";
 import { ProofFaq } from "@/components/gli/proof-faq";
-import { ProofImage, TypeThumb } from "@/components/gli/proof-image";
+import { ProofImage, StockFigure, TypeThumb } from "@/components/gli/proof-image";
+import { productStock, serviceStock } from "@/content/stock";
 
 export const revalidate = 300;
 export const generateStaticParams = () => SERVICES.map((s) => ({ slug: s.slug }));
@@ -78,6 +79,8 @@ export default async function ServicePage({ params }: Props) {
           <div className="mx-auto max-w-md rotate-1">
             {img ? (
               <ProofImage image={img} priority sizes="(min-width: 1024px) 420px, 90vw" />
+            ) : serviceStock(s.slug) ? (
+              <StockFigure photo={serviceStock(s.slug)!} priority sizes="(min-width: 1024px) 420px, 90vw" />
             ) : (
               <TypeThumb label={s.eyebrow} sub="GLI production" className="shadow-xl" />
             )}
@@ -149,6 +152,7 @@ export default async function ServicePage({ params }: Props) {
                     leadTime={ps.leadTime}
                     image={p.image}
                     fallbackLabel={categoryLabel(p.category)}
+                    photo={productStock(p.slug)}
                     addToQuote={<AddToQuote slug={p.slug} name={p.name} />}
                   />
                 );
