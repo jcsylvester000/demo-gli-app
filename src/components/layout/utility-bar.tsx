@@ -1,10 +1,13 @@
 import Link from "next/link";
 import { Mail, MessageCircle, Phone } from "lucide-react";
-import { CONTACT, hasValue, links } from "@/content/site";
+import { linksFor } from "@/content/site";
+import { getContact } from "@/lib/server/site-settings";
 import { TrackedLink } from "@/components/ui/tracked-link";
 
 /** Utility bar (BRD FR-003): click-to-call, Viber, email. Channels without confirmed values are not shown. For Global Teams is phase 2 (hidden). */
-export function UtilityBar() {
+export async function UtilityBar() {
+  const c = await getContact();
+  const links = linksFor(c);
   const tel = links.tel();
   const viber = links.viber();
   const email = links.email();
@@ -17,7 +20,7 @@ export function UtilityBar() {
           {tel ? (
             <li>
               <TrackedLink href={tel} event="phone_click" channel="phone" location="utility_bar" className={item}>
-                <Phone aria-hidden="true" className="size-3.5" /> {CONTACT.landline.value}
+                <Phone aria-hidden="true" className="size-3.5" /> {links.telLabel()}
               </TrackedLink>
             </li>
           ) : null}
@@ -28,10 +31,10 @@ export function UtilityBar() {
               </TrackedLink>
             </li>
           ) : null}
-          {email && hasValue(CONTACT.email) ? (
+          {email ? (
             <li>
               <TrackedLink href={email} event="email_click" channel="email" location="utility_bar" className={item}>
-                <Mail aria-hidden="true" className="size-3.5" /> {CONTACT.email.value}
+                <Mail aria-hidden="true" className="size-3.5" /> {c.email.value}
               </TrackedLink>
             </li>
           ) : null}

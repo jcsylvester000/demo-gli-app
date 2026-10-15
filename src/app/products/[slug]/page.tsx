@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { redirectOrNotFound } from "@/lib/server/redirects";
 import { ArrowRight } from "lucide-react";
 import { PRODUCTS, categoryLabel, productBySlug } from "@/content/products";
 import { serviceBySlug } from "@/content/services";
@@ -20,7 +20,6 @@ import { ProofFaq } from "@/components/gli/proof-faq";
 import { ProofImage, TypeThumb } from "@/components/gli/proof-image";
 
 export const revalidate = 300;
-export const dynamicParams = false;
 export const generateStaticParams = () => PRODUCTS.map((p) => ({ slug: p.slug }));
 
 type Props = { params: Promise<{ slug: string }> };
@@ -37,8 +36,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 /** Product template (BRD FR-041): gallery, spec table, inclusions, lead time, where used, related products, FAQ, Add to quote. */
 export default async function ProductPage({ params }: Props) {
-  const p = productBySlug((await params).slug);
-  if (!p) notFound();
+  const { slug } = await params;
+  const p = productBySlug(slug);
+  if (!p) return redirectOrNotFound(`/products/${slug}`);
   const g = await getGovernance();
   const ps = productSetting(g, p.slug);
   const cases = p.cases

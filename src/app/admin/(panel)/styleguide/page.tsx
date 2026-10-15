@@ -1,3 +1,4 @@
+import { requireAdmin } from "@/lib/server/admin/guard";
 import { GliMark, LogoLockup } from "@/components/brand/logo";
 import { BrushUnderline, CmykBar, CmykSeal, CropMarks, RegMark } from "@/components/brand/print-marks";
 import { buttonClass } from "@/components/ui/button";
@@ -9,7 +10,7 @@ import { ProofImage } from "@/components/gli/proof-image";
 import { WORK_IMAGES } from "@/content/work-images";
 import dieline from "@/assets/demo/demo-dieline.png";
 
-export const metadata = { title: "Style guide", robots: { index: false, follow: false } };
+export const metadata = { title: "Style guide" };
 
 const SWATCHES = [
   ["GLI Blue", "bg-gli-blue", "#005AA9", "text-white"],
@@ -24,10 +25,11 @@ const SWATCHES = [
   ["Press Yellow", "bg-gli-yellow", "#FFC20E", "text-gli-ink"],
 ] as const;
 
-/** Brand foundation preview (Batch 1, noindex). Moves behind the admin login in Batch 5. */
-export default function StyleGuide() {
+/** Brand foundation and component preview (admin only). */
+export default async function StyleGuide() {
+  await requireAdmin("content");
   return (
-    <div className="container-site space-y-16 py-14">
+    <div className="space-y-16 rounded-lg bg-white p-6 md:p-10">
       <header>
         <p className="eyebrow text-gli-blue">Brand foundation · Batch 1</p>
         <h1 className="mt-2 text-4xl">GLI style guide</h1>

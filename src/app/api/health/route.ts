@@ -9,6 +9,7 @@ const config = () => ({
   turnstile: turnstileConfigured() ? "configured" : "test-keys",
   retryJob: (process.env.CRON_SECRET || "").length >= 16 ? "configured" : "not_configured",
   teamAlert: process.env.TEAM_ALERT_WEBHOOK_URL ? "configured" : "off",
+  adminLogin: (process.env.BETTER_AUTH_SECRET || "").length >= 32 ? "configured" : "secret_missing",
 });
 
 export const dynamic = "force-dynamic";

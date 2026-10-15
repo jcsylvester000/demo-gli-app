@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { redirectOrNotFound } from "@/lib/server/redirects";
 import { ArrowRight } from "lucide-react";
 import { SERVICES, serviceBySlug } from "@/content/services";
 import { categoryLabel, productBySlug } from "@/content/products";
@@ -21,7 +21,6 @@ import { ProofFaq } from "@/components/gli/proof-faq";
 import { ProofImage, TypeThumb } from "@/components/gli/proof-image";
 
 export const revalidate = 300;
-export const dynamicParams = false;
 export const generateStaticParams = () => SERVICES.map((s) => ({ slug: s.slug }));
 
 type Props = { params: Promise<{ slug: string }> };
@@ -35,8 +34,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 /** Service template (BRD FR-020): hero, deliverables, process, where we've done it + related cases, related products, FAQ. */
 export default async function ServicePage({ params }: Props) {
-  const s = serviceBySlug((await params).slug);
-  if (!s) notFound();
+  const { slug } = await params;
+  const s = serviceBySlug(slug);
+  if (!s) return redirectOrNotFound(`/services/${slug}`);
   const g = await getGovernance();
   const cases = visibleCases(g)
     .filter((c) => c.services.includes(s.slug))

@@ -1,5 +1,5 @@
 import "server-only";
-import { ALL_SERVICES, CONTACT, INDUSTRIES, responsePromise } from "@/content/site";
+import { ALL_SERVICES, INDUSTRIES, responsePromiseFor, type Contact } from "@/content/site";
 import { productBySlug } from "@/content/products";
 import { siteUrl } from "@/lib/utils";
 
@@ -80,10 +80,10 @@ const table = (r: [string, string][]) =>
     .join("")}</table>`;
 
 /** Auto-reply to the client (Document 4 §10). No unconfirmed promises or placeholder numbers. */
-export function autoReply(l: LeadForMail): Mail {
+export function autoReply(l: LeadForMail, contact: Contact): Mail {
   const first = l.name.split(/\s+/)[0];
   const r = rows(l);
-  const when = responsePromise();
+  const when = responsePromiseFor(contact);
   if (l.kind === "quote") {
     const subject = `Your GLI job ticket ${l.ticketNo}`;
     const lead = `Hi ${first}, thanks for your job ticket. Here's a copy of what you sent us.`;
@@ -138,4 +138,3 @@ export function teamAlert(l: LeadForMail) {
   return { text };
 }
 
-export const contactFallback = () => CONTACT.email.value;

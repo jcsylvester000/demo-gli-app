@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { redirectOrNotFound } from "@/lib/server/redirects";
 import { ArrowRight } from "lucide-react";
 import { ARTICLES, ARTICLE_BODIES, ARTICLE_SERVICE, categoryName } from "@/content/articles";
 import { serviceBySlug } from "@/content/services";
@@ -13,7 +13,6 @@ import { RegMark } from "@/components/brand/print-marks";
 import { buttonClass } from "@/components/ui/button";
 import { InsightRow } from "@/components/gli/insight-row";
 
-export const dynamicParams = false;
 export const generateStaticParams = () => ARTICLES.map((a) => ({ slug: a.slug }));
 
 type Props = { params: Promise<{ slug: string }> };
@@ -38,7 +37,7 @@ export default async function ArticlePage({ params }: Props) {
   const { slug } = await params;
   const a = ARTICLES.find((x) => x.slug === slug);
   const body = a ? ARTICLE_BODIES[a.slug] : undefined;
-  if (!a || !body) notFound();
+  if (!a || !body) return redirectOrNotFound(`/insights/${slug}`);
   const service = serviceBySlug(ARTICLE_SERVICE[a.slug] ?? "");
   const related = ARTICLES.filter((x) => x.slug !== a.slug).slice(0, 3);
   const updated = body.updated ?? a.published;

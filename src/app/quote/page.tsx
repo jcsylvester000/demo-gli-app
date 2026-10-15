@@ -1,4 +1,5 @@
-import { responsePromise } from "@/content/site";
+import { responsePromiseFor } from "@/content/site";
+import { getContact } from "@/lib/server/site-settings";
 import { pageMetadata } from "@/lib/seo";
 import { Breadcrumbs } from "@/components/layout/breadcrumbs";
 import { RegMark } from "@/components/brand/print-marks";
@@ -11,7 +12,10 @@ export const metadata = pageMetadata({
 });
 
 /** /quote (BRD P-30). No CTA band or floating chat here (layout hides them). */
-export default function QuotePage() {
+export const revalidate = 300;
+
+export default async function QuotePage() {
+  const contact = await getContact();
   return (
     <>
       <Breadcrumbs items={[{ name: "Request a Quote", href: "/quote" }]} />
@@ -21,7 +25,7 @@ export default function QuotePage() {
             <p className="eyebrow text-gli-blue">Request a quote</p>
             <h1 className="mt-2 text-[2.25rem] leading-[1.08] md:text-[3rem]">Start a job ticket</h1>
             <p className="mt-4 text-lg text-gli-ink">
-              Four short steps. You&apos;ll get a ticket number right away and a call from a producer{responsePromise()}.
+              Four short steps. You&apos;ll get a ticket number right away and a call from a producer{responsePromiseFor(contact)}.
             </p>
             <p className="mt-4 inline-flex items-center gap-2 text-[0.9375rem] text-gli-slate">
               <RegMark className="text-gli-signal" /> One accountable team since 1996 · 50+ brands served

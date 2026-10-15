@@ -73,10 +73,14 @@ export const LEGAL_LINKS = [
   { href: "/terms", label: "Terms of Use" },
 ] as const;
 
-type Field = { value: string; pending: boolean };
+export type Field = { value: string; pending: boolean };
 const pending = (value: string): Field => ({ value, pending: true });
 
-/** Contact details: GLI to confirm (Open Question Q-02). */
+/**
+ * Contact defaults. Every value starts as `pending` (not confirmed by GLI, Q-02) and is never printed or linked.
+ * Admins fill these in at /admin/settings (site_setting "contact"); lib/server/site-settings.ts → getContact()
+ * merges saved values over these defaults. All components read contact details through getContact().
+ */
 export const CONTACT = {
   legalName: "Graphics Library, Inc.",
   shortName: "GLI",
@@ -85,26 +89,33 @@ export const CONTACT = {
   address: pending("Metro Manila, Philippines"),
   landline: pending(""),
   mobile: pending(""),
-  viberIntl: pending(""), // e.g. 639171234567
+  viberIntl: pending(""), // digits incl. country code, e.g. 639171234567
   whatsappIntl: pending(""),
   messengerPage: pending(""), // m.me/<page>
   email: pending(""),
   hours: pending("Monday to Friday, 8:30 am to 5:30 pm"),
-  /** Response-time promise (Q-04). Shown only once GLI confirms it. */
+  /** Response-time promise (Q-04), e.g. "within one business day". Shown only once confirmed. */
   responseTime: pending("within one business day"),
 };
-
-/** " within one business day" once confirmed, otherwise "" (never print an unconfirmed promise). */
-export const responsePromise = () => (CONTACT.responseTime.pending ? "" : ` ${CONTACT.responseTime.value}`);
+export type Contact = typeof CONTACT;
+export const EDITABLE_CONTACT_FIELDS = ["address", "landline", "mobile", "viberIntl", "whatsappIntl", "messengerPage", "email", "hours", "responseTime"] as const;
+export type EditableContactField = (typeof EDITABLE_CONTACT_FIELDS)[number];
 
 export const hasValue = (f: Field) => f.value.trim().length > 0;
-/** True when any contact detail is still a placeholder (shows a preview-only notice in the footer). */
-export const CONTACT_PENDING = Object.values(CONTACT).some((v) => typeof v === "object" && v.pending);
+const confirmed = (f: Field) => !f.pending && hasValue(f);
 
-export const links = {
-  tel: () => (hasValue(CONTACT.landline) ? `tel:${CONTACT.landline.value.replace(/[^\d+]/g, "")}` : null),
-  viber: () => (hasValue(CONTACT.viberIntl) ? `viber://chat?number=%2B${CONTACT.viberIntl.value}` : null),
-  whatsapp: () => (hasValue(CONTACT.whatsappIntl) ? `https://wa.me/${CONTACT.whatsappIntl.value}` : null),
-  messenger: () => (hasValue(CONTACT.messengerPage) ? `https://m.me/${CONTACT.messengerPage.value}` : null),
-  email: () => (hasValue(CONTACT.email) ? `mailto:${CONTACT.email.value}` : null),
-};
+/** True while any contact detail is still unconfirmed (shows a preview-only notice in the footer). */
+export const contactPending = (c: Contact) => EDITABLE_CONTACT_FIELDS.some((k) => c[k].pending);
+
+/** " within one business day" once confirmed, otherwise "" (never print an unconfirmed promise). */
+export const responsePromiseFor = (c: Contact) => (confirmed(c.responseTime) ? ` ${c.responseTime.value}` : "");
+
+const digits = (v: string) => v.replace(/[^\d]/g, "");
+export const linksFor = (c: Contact) => ({
+  tel: () => (confirmed(c.landline) ? `tel:${c.landline.value.replace(/[^\d+]/g, "")}` : confirmed(c.mobile) ? `tel:${c.mobile.value.replace(/[^\d+]/g, "")}` : null),
+  telLabel: () => (confirmed(c.landline) ? c.landline.value : confirmed(c.mobile) ? c.mobile.value : ""),
+  viber: () => (confirmed(c.viberIntl) ? `viber://chat?number=%2B${digits(c.viberIntl.value)}` : null),
+  whatsapp: () => (confirmed(c.whatsappIntl) ? `https://wa.me/${digits(c.whatsappIntl.value)}` : null),
+  messenger: () => (confirmed(c.messengerPage) ? `https://m.me/${c.messengerPage.value.replace(/^.*m\.me\//, "").replace(/[^\w.\-]/g, "")}` : null),
+  email: () => (confirmed(c.email) ? `mailto:${c.email.value}` : null),
+});

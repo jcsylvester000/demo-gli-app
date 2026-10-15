@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { redirectOrNotFound } from "@/lib/server/redirects";
 import { INSIGHT_CATEGORIES } from "@/content/articles";
 import { pageMetadata } from "@/lib/seo";
 import { Breadcrumbs } from "@/components/layout/breadcrumbs";
 import { PageHero } from "@/components/layout/page-hero";
 import { InsightsListing } from "@/components/pages/insights-listing";
 
-export const dynamicParams = false;
 export const generateStaticParams = () => INSIGHT_CATEGORIES.map((c) => ({ slug: c.slug }));
 
 type Props = { params: Promise<{ slug: string }> };
@@ -24,8 +23,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 /** Category pages are indexable (FR-050). */
 export default async function InsightCategory({ params }: Props) {
-  const c = find((await params).slug);
-  if (!c) notFound();
+  const { slug } = await params;
+  const c = find(slug);
+  if (!c) return redirectOrNotFound(`/insights/category/${slug}`);
   return (
     <>
       <Breadcrumbs

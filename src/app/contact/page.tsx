@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { CONTACT, hasValue, links, responsePromise } from "@/content/site";
+import { hasValue, linksFor, responsePromiseFor } from "@/content/site";
+import { getContact } from "@/lib/server/site-settings";
 import { chatChannels } from "@/components/layout/channels";
 import { pageMetadata } from "@/lib/seo";
 import { siteUrl } from "@/lib/utils";
@@ -18,10 +19,14 @@ export const metadata = pageMetadata({
 });
 
 /** Contact (BRD FR-070). Contact details render only once GLI confirms them (Q-02); the form always works. */
-export default function ContactPage() {
+export const revalidate = 300;
+
+export default async function ContactPage() {
+  const CONTACT = await getContact();
+  const links = linksFor(CONTACT);
   const tel = links.tel();
   const email = links.email();
-  const channels = chatChannels().filter((c) => c.key !== "email");
+  const channels = chatChannels(CONTACT).filter((c) => c.key !== "email");
   const hours = CONTACT.hours.pending ? null : CONTACT.hours.value;
   const address = hasValue(CONTACT.address) && !CONTACT.address.pending ? CONTACT.address.value : null;
 
@@ -36,14 +41,14 @@ export default function ContactPage() {
     foundingDate: "1996",
     areaServed: { "@type": "Country", name: "Philippines" },
     ...(address ? { address: { "@type": "PostalAddress", streetAddress: address, addressRegion: "Metro Manila", addressCountry: "PH" } } : {}),
-    ...(tel ? { telephone: CONTACT.landline.value } : {}),
+    ...(tel ? { telephone: links.telLabel() } : {}),
     ...(email ? { email: CONTACT.email.value } : {}),
   };
 
   return (
     <>
       <Breadcrumbs items={[{ name: "Contact", href: "/contact" }]} />
-      <PageHero eyebrow="Contact" title="Talk to GLI" intro={`Call, message or drop by. A producer will get back to you${responsePromise()}.`} primary={{ label: "Start a job ticket", href: "/quote" }} proof={null} />
+      <PageHero eyebrow="Contact" title="Talk to GLI" intro={`Call, message or drop by. A producer will get back to you${responsePromiseFor(CONTACT)}.`} primary={{ label: "Start a job ticket", href: "/quote" }} proof={null} />
       <section className="bg-white">
         <div className="container-site grid gap-12 py-12 md:py-16 lg:grid-cols-[1.3fr_1fr]">
           <div>
@@ -80,7 +85,7 @@ export default function ContactPage() {
                     <dt className="sr-only">Landline</dt>
                     <dd>
                       <TrackedLink href={tel} event="phone_click" channel="phone" location="contact" className="font-semibold text-gli-blue underline underline-offset-4">
-                        {CONTACT.landline.value}
+                        {links.telLabel()}
                       </TrackedLink>
                     </dd>
                   </div>

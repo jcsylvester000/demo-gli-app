@@ -30,6 +30,9 @@
   --color-border: var(--color-gli-line);
   --color-ring: var(--color-gli-blue);
   --color-danger: #b42318; /* form errors only (6.0:1 on white) */
+  --color-danger-tint: #fde2e1; /* admin status chips */
+  --color-success: #14532d;
+  --color-success-tint: #d9f2e3;
 
   --font-heading: var(--font-barlow), Arial, sans-serif;
   --font-body: var(--font-source-sans), Arial, sans-serif;

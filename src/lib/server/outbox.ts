@@ -2,15 +2,16 @@ import "server-only";
 import type { PoolClient } from "pg";
 import { getPool } from "./pool";
 import { autoReply, salesNotify, sendMail, teamAlert, type LeadForMail, type Mail } from "./email";
+import type { Contact } from "@/content/site";
 
 /**
  * Fan-out after a lead is saved (BRD FR-064): auto-reply, sales notification, team alert.
  * Each send is a row in `outbox`, written in the SAME transaction as the lead, then sent. A failed send is retried
  * with back-off (5, 10, 20, 40, 80 min) by later submissions, the scheduled job and the admin; the lead is never lost.
  */
-export async function enqueueFanout(client: PoolClient, l: LeadForMail) {
+export async function enqueueFanout(client: PoolClient, l: LeadForMail, contact: Contact) {
   const items: [string, unknown][] = [
-    ["auto_reply", autoReply(l)],
+    ["auto_reply", autoReply(l, contact)],
     ["sales_notify", salesNotify(l)],
   ];
   if (process.env.TEAM_ALERT_WEBHOOK_URL) items.push(["team_alert", teamAlert(l)]);

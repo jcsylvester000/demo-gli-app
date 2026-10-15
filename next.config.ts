@@ -44,7 +44,12 @@ const nextConfig: NextConfig = {
     NEXT_PUBLIC_ALLOW_INDEXING: allowIndexing ? "true" : "false",
   },
   async headers() {
-    return [{ source: "/:path*", headers: securityHeaders }];
+    return [
+      { source: "/:path*", headers: securityHeaders },
+      // The admin is never indexed or cached by browsers/CDNs.
+      { source: "/admin/:path*", headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }, { key: "Cache-Control", value: "private, no-store" }] },
+      { source: "/admin", headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }, { key: "Cache-Control", value: "private, no-store" }] },
+    ];
   },
 };
 

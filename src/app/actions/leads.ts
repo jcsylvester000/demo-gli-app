@@ -8,6 +8,7 @@ import { nextTicketNo } from "@/lib/server/ticket";
 import { enqueueFanout, processOutbox } from "@/lib/server/outbox";
 import type { LeadForMail } from "@/lib/server/email";
 import { headers } from "next/headers";
+import { getContact } from "@/lib/server/site-settings";
 
 export type SubmitResult = { ok: true; ticket: string | null } | { ok: false; error: string; fieldErrors?: Record<string, string> };
 
@@ -59,6 +60,7 @@ export async function submitQuote(input: QuoteInput): Promise<SubmitResult> {
   if (blocked) return { ok: false, error: blocked };
 
   const ip = await ipHash();
+  const contact = await getContact(); // before the transaction: never hold two connections at once
   const client = await getPool().connect();
   let lead: LeadForMail;
   try {
@@ -135,7 +137,7 @@ export async function submitQuote(input: QuoteInput): Promise<SubmitResult> {
       utm: [d.utmSource, d.utmMedium, d.utmCampaign].filter(Boolean).join(" / ") || null,
       landingPage: d.landingPage,
     };
-    await enqueueFanout(client, lead);
+    await enqueueFanout(client, lead, contact);
     await client.query("COMMIT");
   } catch (e) {
     await client.query("ROLLBACK").catch(() => {});
@@ -156,6 +158,7 @@ export async function submitContact(input: ContactInput): Promise<SubmitResult> 
   const blocked = await guard(d.turnstileToken, d.website);
   if (blocked) return { ok: false, error: blocked };
   const ip = await ipHash();
+  const contact = await getContact(); // before the transaction: never hold two connections at once
   const client = await getPool().connect();
   let lead: LeadForMail;
   try {
@@ -168,7 +171,7 @@ export async function submitContact(input: ContactInput): Promise<SubmitResult> 
     const id = Number(rows[0].id);
     await client.query(`INSERT INTO lead_activity (lead_id, type, body) VALUES ($1, 'created', 'Contact form submitted')`, [id]);
     lead = { id, kind: "contact", ticketNo: null, name: d.name, email: d.email, mobile: d.mobile, notes: d.message, utm: [d.utmSource, d.utmMedium, d.utmCampaign].filter(Boolean).join(" / ") || null, landingPage: d.landingPage };
-    await enqueueFanout(client, lead);
+    await enqueueFanout(client, lead, contact);
     await client.query("COMMIT");
   } catch (e) {
     await client.query("ROLLBACK").catch(() => {});

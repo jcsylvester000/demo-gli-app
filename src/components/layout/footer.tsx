@@ -1,16 +1,19 @@
 import Link from "next/link";
 import { GliMark } from "@/components/brand/logo";
-import { CmykSeal } from "@/components/brand/print-marks";
+import { CmykSeal, RegMark } from "@/components/brand/print-marks";
 import { CookieSettingsButton } from "@/components/consent/consent-manager";
 import { TrackedLink } from "@/components/ui/tracked-link";
-import { ALL_SERVICES, COMPANY_LINKS, CONTACT, CONTACT_PENDING, LEGAL_LINKS, hasValue, links } from "@/content/site";
+import { ALL_SERVICES, COMPANY_LINKS, LEGAL_LINKS, contactPending, hasValue, linksFor } from "@/content/site";
+import { getContact } from "@/lib/server/site-settings";
 import { chatChannels } from "./channels";
 
 /** Press Footer (S10, BRD FR-004): Library Navy, NAP, service/company/contact/legal links, letter-spaced wordmark band and CMYK seal. */
-export function Footer() {
+export async function Footer() {
+  const CONTACT = await getContact();
+  const links = linksFor(CONTACT);
   const tel = links.tel();
   const email = links.email();
-  const channels = chatChannels().filter((c) => c.key !== "email");
+  const channels = chatChannels(CONTACT).filter((c) => c.key !== "email");
   const heading = "eyebrow text-gli-sky";
   const link = "inline-flex min-h-9 items-center text-white/90 hover:text-white hover:underline underline-offset-4";
 
@@ -26,7 +29,7 @@ export function Footer() {
             {tel ? (
               <p>
                 <TrackedLink href={tel} event="phone_click" channel="phone" location="footer" className="hover:underline">
-                  {CONTACT.landline.value}
+                  {links.telLabel()}
                 </TrackedLink>
               </p>
             ) : null}
@@ -114,12 +117,22 @@ export function Footer() {
           <CmykSeal />
         </div>
         <div className="container-site flex flex-col gap-2 pb-6 text-[0.8125rem] text-white/70 md:flex-row md:justify-between">
-          <p>© {new Date().getFullYear()} Graphics Library, Inc. All rights reserved. Client names and marks belong to their respective owners.</p>
-          <Link href="/admin" className="hover:text-white" rel="nofollow">
-            Admin
-          </Link>
+          <p>
+            © {new Date().getFullYear()} Graphics Library, Inc. All rights reserved. Client names and marks belong to their respective owners.
+            {/* Staff sign-in: deliberately discreet (a tiny registration mark after the copyright), keyboard-reachable with a visible focus ring. */}
+            <Link
+              href="/admin/login"
+              rel="nofollow"
+              prefetch={false}
+              aria-label="Staff sign-in"
+              title="Staff"
+              className="ml-1.5 inline-grid size-5 place-items-center rounded-full align-middle text-white/40 transition-colors hover:text-white/75"
+            >
+              <RegMark className="size-2.5" />
+            </Link>
+          </p>
         </div>
-        {CONTACT_PENDING ? (
+        {contactPending(CONTACT) ? (
           <p className="container-site pb-4 text-[0.75rem] text-gli-yellow">Preview: some contact details are pending confirmation from GLI.</p>
         ) : null}
       </div>

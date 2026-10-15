@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useActionState } from "react";
+import { startTransition, useActionState } from "react";
 import { subscribeNewsletter, type NewsletterState } from "@/app/actions/newsletter";
 import { buttonClass } from "@/components/ui/button";
 
@@ -19,7 +19,15 @@ export function NewsletterBox({ title, body, note, page }: { title: string; body
           {state.message}
         </p>
       ) : (
-        <form action={action} className="mt-5 space-y-3" noValidate>
+        <form
+          className="mt-5 space-y-3"
+          noValidate
+          onSubmit={(e) => {
+            e.preventDefault(); // keep the typed email if the server returns an error
+            const fd = new FormData(e.currentTarget);
+            startTransition(() => action(fd));
+          }}
+        >
           <input type="hidden" name="page" value={page} />
           <div className="absolute -left-[9999px]" aria-hidden="true">
             <label>

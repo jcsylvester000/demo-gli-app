@@ -43,6 +43,21 @@ The site stays `noindex` until the real domain is live: then set `ALLOW_INDEXING
 - Without email settings, leads still save and emails wait in the outbox until settings are added.
 - `/api/health` shows which integrations are configured (no values).
 
+## Admin (Batch 5)
+
+- Sign in at `/admin/login`. The public footer links there with a deliberately discreet mark (⌖) after the copyright line.
+- First account: username `Admin`, temporary password `Admin1234` (or `ADMIN_INITIAL_PASSWORD`), created by `db:migrate`
+  on an empty database. It must be changed at first sign-in. Turn on two-step verification under My account.
+- Roles: **Sales** (leads, files), **Editor** (case studies, prices and lead times, contact details, style guide; no lead
+  data), **Admin** (everything: team, client permissions, Rx clearance, testimonials, redirects, CSV export, erase).
+- Leads: overview (new, overdue over 1 business day, follow-ups, by service/source), list with search and filters, detail
+  with one-tap Call/Viber/WhatsApp/Email, status/owner/priority/follow-up, notes, private file downloads, email retry,
+  CSV export (Admin) and erase for data-subject requests (Admin).
+- Publishing changes (permissions, cases, testimonials, prices, contact details, redirects) refresh the public site
+  within seconds (cache tag `governance`).
+- Locked out after 5 failed sign-ins for 15 minutes. If the only Admin forgets their password, run
+  `npm run db:migrate` against an empty `user` table or ask the developer to reset it.
+
 ## Structure
 
 ```

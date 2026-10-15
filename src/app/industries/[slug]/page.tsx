@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { redirectOrNotFound } from "@/lib/server/redirects";
 import { ArrowRight } from "lucide-react";
 import { INDUSTRY_PAGES, industryBySlug } from "@/content/industries";
 import { serviceBySlug } from "@/content/services";
@@ -16,7 +16,6 @@ import { CaseCard } from "@/components/gli/case-card";
 import { SignOffTestimonial } from "@/components/gli/sign-off-testimonial";
 
 export const revalidate = 300;
-export const dynamicParams = false;
 export const generateStaticParams = () => INDUSTRY_PAGES.map((i) => ({ slug: i.slug }));
 
 type Props = { params: Promise<{ slug: string }> };
@@ -30,8 +29,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 /** Industry template (BRD FR-021): copy, permission-filtered client list, related cases (by industry tag), testimonial, CTA. */
 export default async function IndustryPage({ params }: Props) {
-  const i = industryBySlug((await params).slug);
-  if (!i) notFound();
+  const { slug } = await params;
+  const i = industryBySlug(slug);
+  if (!i) return redirectOrNotFound(`/industries/${slug}`);
   const g = await getGovernance();
   const cases = visibleCases(g)
     .filter((c) => c.industry === i.slug && !c.archive)

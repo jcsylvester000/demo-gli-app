@@ -1,7 +1,8 @@
 import { timingSafeEqual } from "node:crypto";
 import { NextResponse } from "next/server";
 import { processOutbox } from "@/lib/server/outbox";
-import { hasDatabase } from "@/lib/server/pool";
+import { getPool, hasDatabase } from "@/lib/server/pool";
+import { uploadStore } from "@/lib/server/blob-store";
 
 export const dynamic = "force-dynamic";
 
@@ -13,5 +14,13 @@ export async function POST(req: Request) {
   if (!ok) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   if (!hasDatabase()) return NextResponse.json({ ok: false, db: "not_configured" }, { status: 503 });
   const r = await processOutbox({ limit: 25 });
-  return NextResponse.json({ ok: true, ...r });
+  // Remove uploads that were never attached to a ticket (abandoned forms) after a day.
+  const pool = getPool();
+  const stale = await pool.query<{ id: string }>(`SELECT id FROM upload_session WHERE status <> 'linked' AND created_at < now() - interval '1 day' LIMIT 100`);
+  const store = await uploadStore();
+  for (const u of stale.rows) {
+    await store.deletePrefix(`${u.id}/`);
+    await pool.query(`DELETE FROM upload_session WHERE id = $1`, [u.id]);
+  }
+  return NextResponse.json({ ok: true, ...r, uploadsCleaned: stale.rowCount });
 }

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { redirectOrNotFound } from "@/lib/server/redirects";
 import { ArrowRight } from "lucide-react";
 import { CASES, caseBySlug } from "@/content/cases";
 import { INDUSTRIES } from "@/content/site";
@@ -41,8 +41,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 /** Case-study template (BRD FR-031): title, spec strip, hero, brief, delivered gallery, optional outcome/testimonial, related, CTA. */
 export default async function CasePage({ params }: Props) {
-  const r = await load((await params).slug);
-  if (!r) notFound();
+  const { slug } = await params;
+  const r = await load(slug);
+  if (!r) return redirectOrNotFound(`/work/${slug}`);
   const { g, item } = r;
   const industry = INDUSTRIES.find((i) => i.slug === item.industry);
   const related = visibleCases(g)
