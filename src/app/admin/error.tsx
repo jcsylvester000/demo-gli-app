@@ -3,7 +3,7 @@
 /** Admin error boundary: e.g. the database is unreachable. Keeps the page titled, landmarked and recoverable. */
 export default function AdminError({ reset }: { error: Error & { digest?: string }; reset: () => void }) {
   return (
-    <main id="main" className="grid min-h-dvh place-items-center bg-gli-mist px-4">
+    <div className="grid min-h-dvh place-items-center bg-gli-mist px-4">
       <title>Admin unavailable | GLI</title>
       <div className="w-full max-w-md rounded-[var(--radius)] border border-gli-line bg-white p-6 shadow-sm">
         <h1 className="text-2xl">Admin is temporarily unavailable</h1>
@@ -12,6 +12,6 @@ export default function AdminError({ reset }: { error: Error & { digest?: string
           Try again
         </button>
       </div>
-    </main>
+    </div>
   );
 }

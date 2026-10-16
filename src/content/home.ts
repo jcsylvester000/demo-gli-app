@@ -24,8 +24,8 @@ export const HOME = {
   services: { h2: "Designed. Printed. Built. Delivered.", intro: "Ten services, one team. Start with what you need; we'll handle the rest." },
   slider: {
     h2: "See it go from render to reality.",
-    body: "Drag the handle. On the left, the 3D render we presented for approval. On the right, the booth we built.",
-    labels: ["3D render", "On the show floor"] as const,
+    body: "Every display starts as a 3D render you approve. This supermarket tower was signed off as the render on the left and installed in store as the photo on the right.",
+    labels: ["3D render for approval", "Installed in store"] as const,
   },
   featured: { h2: "Recent and remarkable", link: { label: "See all work", href: "/work" } },
   counters: [

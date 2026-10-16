@@ -61,7 +61,7 @@ export const CASES: CaseStudy[] = [
     archive: true,
     brief: "{Client} brought its sales team to Boracay for its national sales conference and needed a production partner who could deliver away from Manila.",
     whatWeDelivered: "GLI produced the conference, including a ship-themed beachfront stage under the theme \"Brave New Voyage\".",
-    images: [],
+    images: [WORK_IMAGES.boracayFireworks],
   },
   {
     slug: "philippine-pediatric-society-convention",
@@ -77,7 +77,7 @@ export const CASES: CaseStudy[] = [
     archive: false,
     brief: "{Client} supported the Philippine Pediatric Society Convention and needed staging for the Plenary Hall at PICC, one of the country's largest convention venues.",
     whatWeDelivered: "GLI produced the staging and event materials for the plenary sessions.",
-    images: [],
+    images: [WORK_IMAGES.ppscStage, WORK_IMAGES.ppscChandeliers, WORK_IMAGES.ppscWide],
   },
   {
     slug: "medical-convention-booth-programme",
@@ -119,7 +119,7 @@ export const CASES: CaseStudy[] = [
       brief: "{Client}'s pharmacist programme brought pharmacists together for a learning event.",
       whatWeDelivered: "GLI produced the event at Crowne Plaza, including a pull-up banner series and the registration area.",
     },
-    images: [],
+    images: [WORK_IMAGES.pharmacistBallroom],
   },
   {
     slug: "in-store-displays-packaging-and-mobile-game",
@@ -140,7 +140,7 @@ export const CASES: CaseStudy[] = [
       brief: "{Client} needed retail presence across several of its household and health-care brands.",
       whatWeDelivered: "GLI designed a family of in-store display modules, trolley and gondola displays, counter dispensers and packaging, a back-to-school promotional mark and a cleaning-challenge mobile game.",
     },
-    images: [WORK_IMAGES.threeMDisplay, WORK_IMAGES.nexcare, WORK_IMAGES.scotchBrite],
+    images: [WORK_IMAGES.twisterInstore, WORK_IMAGES.twisterRender, WORK_IMAGES.threeMDisplay, WORK_IMAGES.nexcare, WORK_IMAGES.scotchBritePacks, WORK_IMAGES.scotchBrite],
   },
   {
     slug: "retail-display-booth-and-dealers-convention",

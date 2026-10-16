@@ -27,6 +27,8 @@ import { ProcessTimeline } from "@/components/gli/process-timeline";
 import { SignOffTestimonial } from "@/components/gli/sign-off-testimonial";
 import { InsightRow } from "@/components/gli/insight-row";
 import { VendorMerge } from "@/components/gli/vendor-merge";
+import { RenderToReality } from "@/components/gli/render-to-reality";
+import { WORK_IMAGES } from "@/content/work-images";
 import { industryStock, stockUrl } from "@/content/stock";
 import Image from "next/image";
 
@@ -134,7 +136,17 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* S2 slider: renders only when a real, permission-cleared render/build pair exists (none yet). */}
+      {/* Render → reality: a real, non-Rx pair (approved 3D render and the installed display). */}
+      {clientStatus(g, "3m") !== "no" ? (
+        <section aria-labelledby="render-title" className="bg-white">
+          <div className="container-site py-16 md:py-24">
+            <SectionHeading id="render-title" eyebrow="Render to reality" title={HOME.slider.h2} intro={HOME.slider.body} />
+            <div className="mt-12">
+              <RenderToReality render={WORK_IMAGES.twisterRender} built={WORK_IMAGES.twisterInstore} labels={HOME.slider.labels} />
+            </div>
+          </div>
+        </section>
+      ) : null}
 
       {/* Featured work (S6) */}
       {featured.length ? (

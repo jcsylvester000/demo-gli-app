@@ -16,7 +16,7 @@ export default function AdminRoot({ children }: { children: React.ReactNode }) {
   const missing = missingSettings();
   if (missing.length) {
     return (
-      <main id="main" className="grid min-h-dvh place-items-center bg-gli-mist px-4">
+      <div className="grid min-h-dvh place-items-center bg-gli-mist px-4">
         <div className="w-full max-w-lg rounded-[var(--radius)] border border-gli-line bg-white p-6 shadow-sm">
           <h1 className="text-2xl">Admin sign-in isn&apos;t set up yet</h1>
           <p className="mt-3 text-gli-slate">The site is missing these settings. Add them in Netlify → Site configuration → Environment variables, then redeploy:</p>
@@ -27,7 +27,7 @@ export default function AdminRoot({ children }: { children: React.ReactNode }) {
           </ul>
           <p className="mt-4 text-[0.875rem] text-gli-slate">The public website is not affected. See README → Deploy for details.</p>
         </div>
-      </main>
+      </div>
     );
   }
   return <div className="min-h-dvh bg-gli-mist">{children}</div>;

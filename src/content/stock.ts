@@ -45,9 +45,6 @@ export const serviceStock = pick({
 
 /** Case studies with no permitted image (pharma/Rx work is kept off the site). */
 export const caseStock = pick({
-  "national-sales-conference-boracay": "boracaySunset",
-  "philippine-pediatric-society-convention": "conferenceHall",
-  "pharmacist-leads-programme": "pharmacistShelf",
   "retail-display-booth-and-dealers-convention": "expoHall",
 });
 

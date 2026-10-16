@@ -4,8 +4,8 @@ import { redirectOrNotFound } from "@/lib/server/redirects";
 import { ArrowRight } from "lucide-react";
 import { SERVICES, serviceBySlug } from "@/content/services";
 import { categoryLabel, productBySlug } from "@/content/products";
-import { SERVICE_MEDIA } from "@/content/service-media";
-import { productSetting, resolveText, visibleCases } from "@/lib/gate";
+import { SERVICE_GALLERY, SERVICE_MEDIA } from "@/content/service-media";
+import { productSetting, resolveText, visibleCases, clientStatus } from "@/lib/gate";
 import { getGovernance } from "@/lib/server/governance";
 import { pageMetadata } from "@/lib/seo";
 import { siteUrl } from "@/lib/utils";
@@ -61,6 +61,7 @@ export default async function ServicePage({ params }: Props) {
     provider: { "@id": `${siteUrl()}/#organization`, "@type": "Organization", name: "Graphics Library, Inc." },
   };
 
+  const gallery = (SERVICE_GALLERY[s.slug] ?? []).filter((img) => !img.client || clientStatus(g, img.client) !== "no");
   return (
     <>
       <Breadcrumbs
@@ -133,6 +134,22 @@ export default async function ServicePage({ params }: Props) {
           </Link>
         </div>
       </section>
+
+      {gallery.length ? (
+        <section aria-labelledby="floor-title" className="bg-white">
+          <div className="container-site py-14 md:py-20">
+            <SectionHeading id="floor-title" eyebrow="From the floor" title="Photos from our jobs" />
+            <ul className="mt-10 grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
+              {gallery.map((img, i) => (
+                <li key={img.alt} className={i === 0 && gallery.length > 3 ? "sm:col-span-2 lg:row-span-2" : undefined}>
+                  <ProofImage image={img} sizes={i === 0 && gallery.length > 3 ? "(min-width: 1024px) 560px, 90vw" : "(min-width: 1024px) 270px, (min-width: 640px) 45vw, 90vw"} />
+                  <p className="mt-3 text-[0.9375rem] text-gli-slate">{img.caption}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      ) : null}
 
       {products.length ? (
         <section aria-labelledby="products-title" className="bg-white">

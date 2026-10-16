@@ -7,8 +7,8 @@ import { WORK_IMAGES, type WorkImage } from "./work-images";
 export const SERVICE_MEDIA: Record<string, WorkImage | null> = {
   "pharma-and-medical-materials": null,
   "booth-design-and-fabrication": null,
-  "events-conventions-and-launches": WORK_IMAGES.feuGolf,
-  "retail-display-and-posm": WORK_IMAGES.threeMDisplay,
+  "events-conventions-and-launches": WORK_IMAGES.ppscStage,
+  "retail-display-and-posm": WORK_IMAGES.twisterInstore,
   "packaging-design": WORK_IMAGES.nexcare,
   "print-and-collateral": WORK_IMAGES.heritage,
   "large-format-signage-and-wraps": WORK_IMAGES.hpBus,
@@ -30,3 +30,23 @@ export const HOME_SERVICE_ORDER = [
   "brand-and-graphic-design",
   "merchandise-and-apparel",
 ];
+
+/**
+ * Extra "from the floor" photos per service page (GLI's own non-Rx work from the Work Experiences deck).
+ * Rendered as a gallery on the service page when present.
+ */
+export const SERVICE_GALLERY: Record<string, WorkImage[]> = {
+  "events-conventions-and-launches": [
+    WORK_IMAGES.ppscChandeliers,
+    WORK_IMAGES.pcpHeroWall,
+    WORK_IMAGES.pcpPrereg,
+    WORK_IMAGES.pcpOnsite,
+    WORK_IMAGES.beachDusk,
+    WORK_IMAGES.beachNight,
+    WORK_IMAGES.symposiumAudience,
+    WORK_IMAGES.boracayFireworks,
+  ],
+  "avp-interactive-games-and-apps": [WORK_IMAGES.symposiumQuiz],
+  "retail-display-and-posm": [WORK_IMAGES.twisterRender, WORK_IMAGES.twisterInstore],
+  "packaging-design": [WORK_IMAGES.scotchBritePacks, WORK_IMAGES.nexcare],
+};
