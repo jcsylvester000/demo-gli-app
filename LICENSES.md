@@ -23,3 +23,6 @@ Items marked "layout reference only" had no licence on 21st.dev and are rebuilt 
 | S12 Proof FAQ | Service, Product, FAQ | Accordion (shadcn) | shadcn | MIT | Rebuilt on native details/summary (Batch 2) |
 | S13 Insight Article Row | Home, Insights, Service | Blog 8 (shadcnblocks) | shadcnblocks | MIT | Rebuilt (Batch 2) |
 | Portfolio preview images | Home, cards | Cropped from GLI Brand Kit portfolio board (GLI's own work) | GLI | Client work; publish per permission register | Replace with GLI originals before launch |
+| Cutting-mat hero, page heroes, CTA panel | All landing pages | 21st.dev hero/CTA patterns reviewed for direction only (Responsive Hero Banner, Centered Hero with Image Fan) | various 21st.dev authors | n/a (no code copied) | Original CSS (mat-grid, rulers, dealt proofs), 2026-10-16 |
+| Vendor-merge diagram | Home problem band | 21st.dev "Grid Feature Cards" reviewed for direction only | Efferd | n/a (no code copied) | Original component, 2026-10-16 |
+| Illustrative photos | Image-less slots | Unsplash (hot-linked, credited) | see src/content/stock.ts | Unsplash Licence | Replace with GLI originals when supplied |

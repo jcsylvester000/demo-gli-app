@@ -178,7 +178,7 @@ export function ContactSettingsForm({ values }: { values: Record<string, string>
             ))}
           </div>
           <p className="text-[0.875rem] text-gli-slate">
-            Only filled-in details appear on the website (header, footer, chat button, Contact page, emails). Leave a field empty to hide it. The response promise appears in sentences like
+            Only filled-in details appear on the website (header, footer, chat button, Contact page). Leave a field empty to hide it. The response promise appears in sentences like
             &ldquo;a producer will call you <em>within one business day</em>&rdquo;.
           </p>
           <button disabled={pending} className={btn("primary")}>

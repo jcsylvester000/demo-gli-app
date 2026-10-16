@@ -25,21 +25,41 @@ export function PageHero({
   aside?: ReactNode;
 }) {
   return (
-    <section className="on-dark ripple-field relative overflow-hidden bg-gli-blue text-white">
-      <div className={aside ? "container-site grid items-center gap-10 py-12 md:py-16 lg:grid-cols-[1.2fr_1fr]" : "container-site py-12 md:py-16"}>
+    <section className="on-dark mat-grid relative overflow-hidden text-white">
+      <span aria-hidden="true" className="mat-ruler-x" />
+      <span aria-hidden="true" className="mat-ruler-y" />
+      <div
+        className={
+          aside
+            ? "container-site relative grid items-center gap-10 py-12 md:py-16 lg:grid-cols-[1.2fr_1fr]"
+            : "container-site relative py-12 md:py-16"
+        }
+      >
         <div className="max-w-3xl">
-          {eyebrow ? <p className="eyebrow text-gli-yellow">{eyebrow}</p> : null}
-          <h1 className="mt-3 text-[2.25rem] leading-[1.08] text-white md:text-[3rem]">{title}</h1>
-          {intro ? <p className="mt-5 text-lg text-gli-tint md:text-xl">{intro}</p> : null}
+          {eyebrow ? (
+            <p className="eyebrow text-gli-yellow">{eyebrow}</p>
+          ) : null}
+          <h1 className="mt-3 text-[2.25rem] font-semibold leading-[1.02] tracking-[-0.015em] text-white md:text-[3.25rem]">
+            {title}
+          </h1>
+          {intro ? (
+            <p className="mt-5 text-lg text-gli-tint md:text-xl">{intro}</p>
+          ) : null}
           {primary || secondary ? (
             <div className="mt-7 flex flex-wrap gap-3">
               {primary ? (
-                <Link href={primary.href} className={buttonClass("accent", "lg")}>
+                <Link
+                  href={primary.href}
+                  className={buttonClass("accent", "lg")}
+                >
                   {primary.label}
                 </Link>
               ) : null}
               {secondary ? (
-                <Link href={secondary.href} className={buttonClass("outline-light", "lg")}>
+                <Link
+                  href={secondary.href}
+                  className={buttonClass("outline-light", "lg")}
+                >
                   {secondary.label}
                 </Link>
               ) : null}

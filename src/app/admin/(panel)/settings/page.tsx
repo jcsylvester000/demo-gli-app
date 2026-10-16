@@ -10,7 +10,7 @@ export default async function Settings() {
   const { rows } = await getPool().query<{ value: Record<string, string> }>(`SELECT value FROM site_setting WHERE key = 'contact'`);
   return (
     <>
-      <PageTitle title="Contact details" sub="Shown in the header bar, footer, chat button, Contact page and client emails. Match your Google Business Profile exactly." />
+      <PageTitle title="Contact details" sub="Shown in the header bar, footer, chat button and Contact page. Match your Google Business Profile exactly." />
       <Card>
         <ContactSettingsForm values={rows[0]?.value ?? {}} />
       </Card>

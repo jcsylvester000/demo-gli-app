@@ -1,6 +1,7 @@
 "use client";
 
 import { startTransition, useActionState, useEffect, useRef, type ReactNode } from "react";
+import { useRouter } from "next/navigation";
 import type { ActionState } from "@/app/admin/actions";
 import { cn } from "@/lib/utils";
 
@@ -26,9 +27,13 @@ export function ActionForm({
 }) {
   const [state, run, pending] = useActionState<ActionState, FormData>(action, {});
   const ref = useRef<HTMLFormElement>(null);
+  const router = useRouter();
   useEffect(() => {
-    if (state.ok && resetOnSuccess) ref.current?.reset();
-  }, [state, resetOnSuccess]);
+    if (!state.ok) return;
+    if (resetOnSuccess) ref.current?.reset();
+    // Re-read the page's server data so lists (new/deleted items, badges, counts) update without a manual reload.
+    router.refresh();
+  }, [state, resetOnSuccess, router]);
   return (
     <form
       ref={ref}

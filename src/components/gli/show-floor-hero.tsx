@@ -10,9 +10,21 @@ import { cn } from "@/lib/utils";
 function Ripple({ className }: { className?: string }) {
   const rings = [220, 330, 440, 560, 690, 830];
   return (
-    <div aria-hidden="true" className={cn("pointer-events-none absolute", className)}>
+    <div
+      aria-hidden="true"
+      className={cn("pointer-events-none absolute", className)}
+    >
       {rings.map((d, i) => (
-        <span key={d} className="gli-ripple-ring" style={{ width: d, height: d, animationDelay: `${i * 0.35}s`, opacity: 1 - i * 0.12 }} />
+        <span
+          key={d}
+          className="gli-ripple-ring"
+          style={{
+            width: d,
+            height: d,
+            animationDelay: `${i * 0.35}s`,
+            opacity: 1 - i * 0.12,
+          }}
+        />
       ))}
     </div>
   );
@@ -43,26 +55,41 @@ export function ShowFloorHero({
   children?: ReactNode;
 }) {
   const [a, b, c, d] = images;
+  // Each proof is dealt from off the mat: start offset, rotation and stagger (transform-only animation).
+  const deal = (x: string, y: string, r: string, delay: number) =>
+    ({
+      "--deal-x": x,
+      "--deal-y": y,
+      "--deal-r": r,
+      "--deal-delay": `${delay}s`,
+    }) as React.CSSProperties;
   return (
-    <section className="on-dark relative overflow-hidden bg-gli-blue text-white">
-      <Ripple className="left-[78%] top-1/2" />
-      <div className="container-site relative grid items-center gap-12 py-14 md:py-20 lg:grid-cols-[1.05fr_1fr] lg:py-24">
+    <section className="on-dark mat-grid relative overflow-hidden text-white">
+      <span aria-hidden="true" className="mat-ruler-x" />
+      <span aria-hidden="true" className="mat-ruler-y" />
+      <Ripple className="left-[76%] top-[52%] opacity-60" />
+      <div className="container-site relative grid items-center gap-12 py-16 md:py-24 lg:grid-cols-[1.1fr_1fr] lg:py-28">
         <div>
-          <p className="eyebrow text-white">{eyebrow}</p>
-          <h1 className="mt-4 text-[2.5rem] leading-[1.04] text-white md:text-[3.5rem]">
+          <p className="eyebrow text-gli-sky">{eyebrow}</p>
+          <h1 className="mt-5 text-[2.75rem] font-semibold leading-[0.98] tracking-[-0.02em] text-white sm:text-[3.5rem] lg:text-[4.5rem]">
             {h1Lead}{" "}
             <span className="relative inline-block whitespace-nowrap">
               {h1Underline}
               <BrushUnderline className="absolute inset-x-0 -bottom-2" />
             </span>
           </h1>
-          <p className="mt-6 max-w-xl text-lg text-gli-tint md:text-xl">{sub}</p>
-          <div className="mt-8 flex flex-wrap gap-3">
+          <p className="mt-7 max-w-xl text-lg text-gli-tint md:text-xl">
+            {sub}
+          </p>
+          <div className="mt-9 flex flex-wrap gap-3">
             <Link href={primary.href} className={buttonClass("accent", "lg")}>
               {primary.label}
             </Link>
             {secondary ? (
-              <Link href={secondary.href} className={buttonClass("outline-light", "lg")}>
+              <Link
+                href={secondary.href}
+                className={buttonClass("outline-light", "lg")}
+              >
                 {secondary.label}
               </Link>
             ) : null}
@@ -71,11 +98,47 @@ export function ShowFloorHero({
         </div>
 
         {images.length >= 2 ? (
-          <div className="relative mx-auto grid w-full max-w-[34rem] grid-cols-2 gap-5 sm:gap-7" aria-label="Recent GLI work" role="group">
-            {a ? <ProofImage image={a} priority sizes="(min-width: 1024px) 260px, 45vw" className="-rotate-2" /> : null}
-            {b ? <ProofImage image={b} sizes="(min-width: 1024px) 260px, 45vw" className="mt-8 rotate-[1.5deg]" /> : null}
-            {c ? <ProofImage image={c} sizes="(min-width: 1024px) 260px, 45vw" className="-mt-4 rotate-1 max-sm:hidden" /> : null}
-            {d ? <ProofImage image={d} sizes="(min-width: 1024px) 260px, 45vw" className="mt-4 -rotate-[1.5deg] max-sm:hidden" /> : null}
+          <div
+            className="relative mx-auto grid w-full max-w-[36rem] grid-cols-2 gap-5 sm:gap-7"
+            aria-label="Recent GLI work"
+            role="group"
+          >
+            {a ? (
+              <div
+                className="gli-deal -rotate-3"
+                style={deal("-60px", "80px", "-14deg", 0.05)}
+              >
+                <ProofImage
+                  image={a}
+                  priority
+                  sizes="(min-width: 1024px) 280px, 45vw"
+                />
+              </div>
+            ) : null}
+            {b ? (
+              <div
+                className="gli-deal mt-10 rotate-2"
+                style={deal("70px", "60px", "12deg", 0.18)}
+              >
+                <ProofImage image={b} sizes="(min-width: 1024px) 280px, 45vw" />
+              </div>
+            ) : null}
+            {c ? (
+              <div
+                className="gli-deal -mt-6 rotate-1 max-sm:hidden"
+                style={deal("-50px", "120px", "10deg", 0.3)}
+              >
+                <ProofImage image={c} sizes="(min-width: 1024px) 280px, 45vw" />
+              </div>
+            ) : null}
+            {d ? (
+              <div
+                className="gli-deal mt-4 -rotate-2 max-sm:hidden"
+                style={deal("60px", "140px", "-12deg", 0.42)}
+              >
+                <ProofImage image={d} sizes="(min-width: 1024px) 280px, 45vw" />
+              </div>
+            ) : null}
           </div>
         ) : null}
       </div>

@@ -112,7 +112,7 @@ export function EraseLead({ id }: { id: string }) {
       {(pending) => (
         <>
           <input type="hidden" name="id" value={id} />
-          <p className="text-[0.875rem] text-gli-slate">For a data-subject request (Data Privacy Act): permanently deletes this lead, its files, notes and messages. This cannot be undone.</p>
+          <p className="text-[0.875rem] text-gli-slate">For a data-subject request (Data Privacy Act): permanently deletes this lead, its files and notes. This cannot be undone.</p>
           <label className="block">
             <Label>Type ERASE to confirm</Label>
             <input name="confirm" autoComplete="off" className={input} />

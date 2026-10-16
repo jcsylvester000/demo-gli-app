@@ -108,7 +108,9 @@ export default async function ArticlePage({ params }: Props) {
         ]}
       />
       <article>
-        <header className="on-dark ripple-field bg-gli-navy text-white">
+        <header className="on-dark mat-grid relative overflow-hidden text-white">
+          <span aria-hidden="true" className="mat-ruler-x" />
+          <span aria-hidden="true" className="mat-ruler-y" />
           <div
             className={
               heroPhoto
