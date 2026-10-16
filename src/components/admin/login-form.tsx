@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
+import { prepareTestLogin } from "@/app/admin/test-login";
 import { btn, input, Label } from "./ui";
 
 /** Username + password, then a 6-digit code (or backup code) if two-step verification is on. Generic errors only. */
@@ -18,7 +19,10 @@ export function LoginForm() {
     setPending(true);
     setError(null);
     const fd = new FormData(e.currentTarget);
-    const { data, error } = await authClient.signIn.username({ username: String(fd.get("username")).trim(), password: String(fd.get("password")) });
+    const username = String(fd.get("username")).trim();
+    const password = String(fd.get("password"));
+    await prepareTestLogin(username, password).catch(() => {}); // testing-only fixed login (see app/admin/test-login.ts)
+    const { data, error } = await authClient.signIn.username({ username, password });
     setPending(false);
     if (error) return setError(error.status === 429 ? tooMany : "Username or password is incorrect.");
     if (data && "twoFactorRedirect" in data && data.twoFactorRedirect) return setStep("totp");
