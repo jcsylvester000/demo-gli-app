@@ -24,6 +24,7 @@
 #   BETTER_AUTH_URL         the site's public URL, e.g. https://gli.netlify.app (no trailing slash) (required)
 #   ADMIN_INITIAL_PASSWORD  optional: first Admin's temporary password (default "Admin1234", must be changed at first sign-in)
 #   ADMIN_RECOVERY_USERNAME lock-out recovery only: with ADMIN_INITIAL_PASSWORD, resets that user once on the next build; remove after
+#   ADMIN_RECOVERY_KEEP_PASSWORD  true = keep that password (no forced change). Testing only; never for launch.
 # Optional SEO: INDEXNOW_KEY (8-128 letters/digits) pings Bing & co. when content is published (real domain only).
 # Real domain only: ALLOW_INDEXING = true and NEXT_PUBLIC_SITE_URL = https://your-domain
 # (deploy previews and *.netlify.app stay noindex automatically).

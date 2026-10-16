@@ -6,6 +6,7 @@
  * Lock-out recovery: set ADMIN_RECOVERY_USERNAME + ADMIN_INITIAL_PASSWORD and redeploy. That user's password becomes
  * the temporary one (must be changed at sign-in), their sessions end and two-step is turned off. Runs once per
  * username/password pair (remembered in site_setting "admin_recovery"); remove both variables afterwards.
+ * ADMIN_RECOVERY_KEEP_PASSWORD=true keeps that password (no forced change at sign-in): testing only, never for launch.
  */
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
@@ -48,7 +49,7 @@ try {
     else if (done.rowCount) console.warn("[db:migrate] recovery already applied; remove ADMIN_RECOVERY_USERNAME from the environment.");
     else {
       const id = u.rows[0].id;
-      await setPassword(betterAuth(options) as never, pool, id, recoverPw, true);
+      await setPassword(betterAuth(options) as never, pool, id, recoverPw, process.env.ADMIN_RECOVERY_KEEP_PASSWORD !== "true");
       await pool.query(`DELETE FROM session WHERE "userId" = $1`, [id]);
       await pool.query(`DELETE FROM "twoFactor" WHERE "userId" = $1`, [id]);
       await pool.query(`UPDATE "user" SET "twoFactorEnabled" = false WHERE id = $1`, [id]);
@@ -58,7 +59,7 @@ try {
         [marker],
       );
       await pool.query(`INSERT INTO admin_audit (actor_id, action, target) VALUES (NULL, 'user.recovery_reset', $1)`, [`user:${id}`]);
-      console.warn(`[db:migrate] recovery: "${recoverUser}" reset to the temporary password, sessions ended, two-step off. Remove ADMIN_RECOVERY_USERNAME now.`);
+      console.warn(`[db:migrate] recovery: "${recoverUser}" password reset${process.env.ADMIN_RECOVERY_KEEP_PASSWORD === "true" ? " (kept, no forced change)" : " (must be changed at sign-in)"}, sessions ended, two-step off. Remove ADMIN_RECOVERY_USERNAME now.`);
     }
   }
   const t = await pool.query<{ n: number }>(`SELECT count(*)::int AS n FROM information_schema.tables WHERE table_schema = 'public'`);
